@@ -223,7 +223,24 @@ td:first-child{font-family:var(--font-mono);font-weight:600}
 .flag{font-size:12.5px;padding:6px 10px;border-radius:8px}
 .flag.warn{background:var(--warn-soft);color:var(--warn)}
 .flag.ok{background:var(--ok-soft);color:var(--ok)}
-textarea{width:100%;min-height:240px;resize:vertical;line-height:1.6}
+textarea{width:100%;min-height:150px;resize:vertical;line-height:1.6}
+.memo-form{display:flex;flex-direction:column;gap:8px}
+#memo-t{font-family:var(--font-mono);text-transform:uppercase;width:150px}
+.filebtn{font-size:13px;font-weight:500;border:1px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer;background:var(--surface)}
+.filebtn:hover{border-color:var(--accent);color:var(--accent)}
+.filebtn input{display:none}
+#notes-q{width:180px}
+.notes{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.notes li{padding:12px 2px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+.notes li:last-child{border-bottom:0}
+.note-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.note-head .when{font-family:var(--font-mono)}
+.note-tag{font-size:11.5px;font-weight:600;padding:1px 8px;border-radius:999px;background:var(--off-soft);color:var(--ink)}
+.note-tag.buy{background:var(--ok-soft);color:var(--ok)}
+.note-tag.sell{background:var(--warn-soft);color:var(--warn)}
+.note-body{white-space:pre-wrap;word-break:break-word;font-size:14px;line-height:1.6}
+.note-del{margin-left:auto;padding:2px 8px;font-size:12px}
+.notes .nempty{padding:20px 2px;color:var(--muted);font-size:13.5px}
 footer{font-size:12px;color:var(--muted)}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -503,14 +520,41 @@ footer{font-size:12px;color:var(--muted)}
         <div class="out" id="c-out"></div>
         <div id="c-flag"></div>
       </section>
-      <section class="panel" aria-label="메모">
+      <section class="panel" aria-label="매매 메모">
         <div class="panel-head">
           <h2>매매 메모</h2>
-          <span class="muted small" id="memo-state">이 브라우저에만 저장</span>
+          <span class="muted small" id="memo-state">작성 중인 내용은 자동으로 임시 저장돼요</span>
         </div>
-        <textarea id="memo" aria-label="매매 메모" placeholder="오늘 볼 것, 진입 근거, 손절 기준, 실적 체크포인트…"></textarea>
+        <form class="memo-form" id="memo-form">
+          <div class="row">
+            <select id="memo-tag" aria-label="종류">
+              <option>메모</option><option>매수</option><option>매도</option><option>관찰</option><option>계획</option><option>복기</option>
+            </select>
+            <input id="memo-t" placeholder="종목 (선택)" maxlength="16" aria-label="종목">
+          </div>
+          <textarea id="memo" aria-label="메모 내용" placeholder="진입 근거, 손절 기준, 실적 체크포인트, 매매 복기…"></textarea>
+          <div class="row">
+            <button class="primary" type="submit">저장</button>
+            <button type="button" id="memo-clear">비우기</button>
+            <span class="muted small">Ctrl+Enter(맥은 ⌘+Enter)로도 저장돼요</span>
+          </div>
+        </form>
       </section>
     </div>
+    <section class="panel" aria-label="메모 기록">
+      <div class="panel-head">
+        <h2>메모 기록 <span class="muted small" id="notes-count"></span></h2>
+        <div class="row">
+          <input id="notes-q" placeholder="검색 (내용·종목)" aria-label="메모 검색">
+          <select id="notes-tag" aria-label="종류 필터"><option value="">모든 종류</option><option>메모</option><option>매수</option><option>매도</option><option>관찰</option><option>계획</option><option>복기</option></select>
+          <button type="button" id="notes-txt">텍스트로 받기</button>
+          <button type="button" id="notes-backup">백업 받기</button>
+          <label class="filebtn">백업 불러오기<input type="file" id="notes-import" accept=".json,application/json"></label>
+        </div>
+      </div>
+      <ol class="notes" id="notes"></ol>
+      <p class="note">메모는 이 브라우저에만 저장돼요. 브라우저 데이터를 지우거나 다른 기기에서 열면 보이지 않으니, 가끔 '백업 받기'로 파일을 받아 두세요.</p>
+    </section>
     <div class="sections" id="sections"></div>
   </section>
 
@@ -862,7 +906,7 @@ footer{font-size:12px;color:var(--muted)}
           .forEach(function(l){ box.appendChild(ext(l[1], l[0], "chip ext")); });
       }
     },
-    tools: function(){}
+    tools: function(){ var mt2 = document.getElementById("memo-t"); if (mt2 && !mt2.value && cur && !isForeign(cur)) mt2.value = cur; }
   };
   function renderView(name){ if (views[name]) views[name](); }
 
@@ -1308,13 +1352,111 @@ footer{font-size:12px;color:var(--muted)}
   ids.forEach(function(id){ document.getElementById(id).addEventListener("input", calc); });
   calc();
 
-  /* ================= memo ================= */
-  var memo = document.getElementById("memo"), memoState = document.getElementById("memo-state"), mt;
+  /* ================= memo: 저장할 때마다 기록에 누적 ================= */
+  var NOTES_KEY = "md-notes-v1";
+  var notes;
+  try { notes = JSON.parse(store.get(NOTES_KEY)) || []; } catch(e){ notes = []; }
+  if (!Array.isArray(notes)) notes = [];
+  var memo = document.getElementById("memo"), memoState = document.getElementById("memo-state"), memoT = document.getElementById("memo-t"), memoTag = document.getElementById("memo-tag"), mt;
   var m0 = store.get("md-memo-v1"); if (m0) memo.value = m0;
-  memo.addEventListener("input", function(){
-    clearTimeout(mt);
-    mt = setTimeout(function(){ memoState.textContent = store.set("md-memo-v1", memo.value) ? "저장됨 · 이 브라우저에만" : "이 환경에서는 저장되지 않아요"; }, 400);
+  function saveDraft(){ store.set("md-memo-v1", memo.value); }
+  memo.addEventListener("input", function(){ clearTimeout(mt); mt = setTimeout(function(){ saveDraft(); memoState.textContent = "임시 저장됨"; }, 400); });
+  function saveNotes(){ return store.set(NOTES_KEY, JSON.stringify(notes)); }
+  function fmtWhen(iso){ var z = zoned("Asia/Seoul", new Date(iso)); return z.y + "." + pad(z.mo) + "." + pad(z.d) + " (" + WD[z.wd] + ") " + pad(z.h) + ":" + pad(z.mi); }
+  function addNote(){
+    var text = memo.value.trim();
+    if (!text){ memoState.textContent = "내용을 입력하세요"; memo.focus(); return; }
+    notes.unshift({id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), at: new Date().toISOString(), tag: memoTag.value, t: clean(memoT.value), text: text});
+    if (saveNotes()){
+      memo.value = ""; saveDraft();
+      memoState.textContent = "저장했어요 · " + fmtWhen(notes[0].at);
+    } else {
+      notes.shift();
+      memoState.textContent = "이 브라우저에서는 저장할 수 없어요 (사생활 보호 모드인지 확인하세요)";
+    }
+    renderNotes();
+  }
+  document.getElementById("memo-form").addEventListener("submit", function(e){ e.preventDefault(); addNote(); });
+  memo.addEventListener("keydown", function(e){ if (e.key === "Enter" && (e.ctrlKey || e.metaKey)){ e.preventDefault(); addNote(); } });
+  var clearArmed = false, clearBtn = document.getElementById("memo-clear");
+  clearBtn.addEventListener("click", function(){
+    if (!memo.value){ return; }
+    if (!clearArmed){ clearArmed = true; clearBtn.textContent = "한 번 더 누르면 비워요"; setTimeout(function(){ clearArmed = false; clearBtn.textContent = "비우기"; }, 3000); return; }
+    memo.value = ""; saveDraft(); clearArmed = false; clearBtn.textContent = "비우기";
   });
+
+  var armedDel = null;
+  function renderNotes(){
+    var box = document.getElementById("notes"); box.textContent = "";
+    var q = document.getElementById("notes-q").value.trim().toLowerCase(), tf = document.getElementById("notes-tag").value;
+    var shown = notes.filter(function(n){
+      if (tf && n.tag !== tf) return false;
+      if (q && (n.text + " " + (n.t || "")).toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    });
+    document.getElementById("notes-count").textContent = notes.length ? "· " + (shown.length === notes.length ? notes.length + "개" : shown.length + " / " + notes.length + "개") : "";
+    if (!notes.length){ box.appendChild(el("li", {"class":"nempty"}, "아직 저장한 메모가 없어요. 위에서 메모를 쓰고 '저장'을 누르면 여기에 날짜순으로 쌓여요.")); return; }
+    if (!shown.length){ box.appendChild(el("li", {"class":"nempty"}, "조건에 맞는 메모가 없어요.")); return; }
+    shown.forEach(function(n){
+      var li = el("li"), head = el("div", {"class":"note-head"});
+      head.appendChild(el("span", {"class":"when"}, fmtWhen(n.at)));
+      head.appendChild(el("span", {"class":"note-tag" + (n.tag === "매수" ? " buy" : n.tag === "매도" ? " sell" : "")}, n.tag || "메모"));
+      if (n.t){
+        var tb = el("button", {type:"button", "class":"chip", title: n.t + " 차트 보기"}, n.t);
+        tb.addEventListener("click", function(){ go("chart", n.t); });
+        head.appendChild(tb);
+      }
+      var del = el("button", {type:"button", "class":"note-del"}, armedDel === n.id ? "정말 삭제" : "삭제");
+      del.addEventListener("click", function(){
+        if (armedDel !== n.id){ armedDel = n.id; renderNotes(); setTimeout(function(){ if (armedDel === n.id){ armedDel = null; renderNotes(); } }, 3000); return; }
+        notes = notes.filter(function(x){ return x.id !== n.id; }); armedDel = null; saveNotes(); renderNotes();
+      });
+      head.appendChild(del);
+      li.appendChild(head);
+      li.appendChild(el("div", {"class":"note-body"}, n.text));
+      box.appendChild(li);
+    });
+  }
+  document.getElementById("notes-q").addEventListener("input", renderNotes);
+  document.getElementById("notes-tag").addEventListener("change", renderNotes);
+
+  function download(name, text, type){
+    var blob = new Blob([text], {type: type}), a = el("a", {href: URL.createObjectURL(blob), download: name});
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+  }
+  function stamp(){ var z = zoned("Asia/Seoul", new Date()); return z.y + pad(z.mo) + pad(z.d); }
+  document.getElementById("notes-txt").addEventListener("click", function(){
+    if (!notes.length) return;
+    var txt = notes.map(function(n){ return "[" + fmtWhen(n.at) + "] " + (n.tag || "메모") + (n.t ? " · " + n.t : "") + "\n" + n.text; }).join("\n\n----------\n\n");
+    download("매매메모_" + stamp() + ".txt", txt, "text/plain;charset=utf-8");
+  });
+  document.getElementById("notes-backup").addEventListener("click", function(){
+    download("market-desk-notes_" + stamp() + ".json", JSON.stringify({app:"market-desk", version:1, notes: notes}, null, 1), "application/json");
+  });
+  document.getElementById("notes-import").addEventListener("change", function(e){
+    var f = e.target.files && e.target.files[0]; if (!f) return;
+    var r = new FileReader();
+    r.onload = function(){
+      try {
+        var d = JSON.parse(r.result), list = Array.isArray(d) ? d : d.notes;
+        if (!Array.isArray(list)) throw new Error("형식");
+        var have = {}; notes.forEach(function(n){ have[n.id] = 1; });
+        var added = 0;
+        list.forEach(function(n){
+          if (!n || typeof n.text !== "string" || !n.at || have[n.id]) return;
+          notes.push({id: String(n.id || (Date.now().toString(36) + added)), at: String(n.at), tag: String(n.tag || "메모"), t: clean(n.t || ""), text: n.text});
+          added++;
+        });
+        notes.sort(function(a, b){ return b.at.localeCompare(a.at); });
+        saveNotes(); renderNotes();
+        memoState.textContent = "백업에서 메모 " + added + "개를 불러왔어요";
+      } catch(err){ memoState.textContent = "백업 파일을 읽지 못했어요. '백업 받기'로 받은 .json 파일인지 확인하세요."; }
+      e.target.value = "";
+    };
+    r.readAsText(f);
+  });
+  renderNotes();
 
   /* ================= start ================= */
   renderTape();
