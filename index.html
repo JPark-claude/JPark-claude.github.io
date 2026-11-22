@@ -185,6 +185,15 @@ td:first-child{font-family:var(--font-mono);font-weight:600}
 .codes div{display:flex;gap:10px;align-items:baseline;font-size:13px}
 .codes b{font-family:var(--font-mono);background:var(--accent-soft);color:var(--accent);border-radius:4px;padding:0 6px;min-width:24px;text-align:center}
 .note{font-size:12.5px;color:var(--muted);margin:0}
+.newsgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.news-card{display:flex;flex-direction:column;gap:3px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.news-card:hover{border-color:var(--accent);text-decoration:none}
+.news-card .nc-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.news-card b{font-size:14px}
+.news-card .nc-why{font-size:12px;color:var(--muted);line-height:1.4}
+.free{font-size:11px;font-weight:600;padding:1px 6px;border-radius:4px;white-space:nowrap}
+.free.y{color:var(--ok);background:var(--ok-soft)}
+.free.p{color:var(--warn);background:var(--warn-soft)}
 
 /* tools */
 .calc{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
@@ -362,6 +371,10 @@ footer{font-size:12px;color:var(--muted)}
 
   <!-- ===================== 뉴스 ===================== -->
   <section class="view" id="v-news" role="tabpanel" aria-label="뉴스">
+    <section class="panel">
+      <div class="panel-head"><h2 id="news-sym-title">종목 뉴스</h2><span class="muted small">선택한 종목의 뉴스 페이지로 바로 열려요</span></div>
+      <div class="newsgrid" id="news-sym"></div>
+    </section>
     <div class="grid2">
       <section class="panel">
         <div class="panel-head">
@@ -380,7 +393,7 @@ footer{font-size:12px;color:var(--muted)}
       </section>
     </div>
     <section class="panel">
-      <div class="panel-head"><h2>뉴스 사이트</h2></div>
+      <div class="panel-head"><h2>시장 뉴스 사이트</h2><span class="muted small">종목과 상관없는 전체 시장 헤드라인</span></div>
       <div class="chips" id="news-links"></div>
     </section>
   </section>
@@ -709,12 +722,54 @@ footer{font-size:12px;color:var(--muted)}
       else cfg.feedMode = "all_symbols";
       tvWidget("tv-news", "timeline", cfg);
       tvWidget("tv-events", "events", {width:"100%", height:"100%", importanceFilter:"0,1", countryFilter:"us,kr,jp,cn"});
-      var t = cur, box = document.getElementById("news-links"); box.textContent = "";
-      var q = encodeURIComponent((nameOf(t) || t) + " 주가");
+      var t = cur, nm = nameOf(t), e = encodeURIComponent(t), lo = t.toLowerCase();
+      document.getElementById("news-sym-title").textContent = t + (nm ? " · " + nm : "") + " 뉴스";
+      var Y = "무료", P = "일부 유료";
+      var src;
+      if (isForeign(t)){
+        var parts = t.split(":"), ys = encodeURIComponent(yahooSym(t));
+        var gx = {TSE:"TYO", KRX:"KRX", KOSDAQ:"KOSDAQ", HKEX:"HKG", TWSE:"TPE", LSE:"LON"}[parts[0]];
+        src = [
+          ["Yahoo Finance", "https://finance.yahoo.com/quote/" + ys + "/news", Y, "해외 종목도 뉴스·보도자료가 모여 있어요"],
+          ["Investing.com", "https://www.investing.com/search/?q=" + encodeURIComponent(parts[1]) + "&tab=news", Y, "종목 검색 후 뉴스 탭"],
+          ["Google Finance", gx ? "https://www.google.com/finance/quote/" + encodeURIComponent(parts[1]) + ":" + gx : null, Y, "여러 매체 기사를 시간순으로"],
+          ["Reuters", "https://www.reuters.com/site-search/?query=" + encodeURIComponent(nm || parts[1]), P, "통신사 원문 · 회사명으로 검색"],
+          ["Nikkei Asia", parts[0] === "TSE" ? "https://asia.nikkei.com/search?query=" + encodeURIComponent(parts[1]) : null, P, "일본 기업 영문 기사"],
+          ["구글 뉴스 (한국어)", "https://news.google.com/search?q=" + encodeURIComponent((nm || parts[1]) + " 주가") + "&hl=ko&gl=KR&ceid=KR:ko", Y, "국내 매체 기사"]
+        ];
+      } else {
+        src = [
+          ["Yahoo Finance", "https://finance.yahoo.com/quote/" + e + "/news", Y, "AP·Reuters·회사 보도자료까지 한곳에"],
+          ["Investing.com", "https://www.investing.com/search/?q=" + e + "&tab=news", Y, "종목 뉴스와 분석 · 검색 결과의 뉴스 탭"],
+          ["CNBC", "https://www.cnbc.com/quotes/" + e + "?tab=news", Y, "미국 경제 방송 · 실적·거시 뉴스"],
+          ["MarketWatch", "https://www.marketwatch.com/investing/stock/" + lo, P, "다우존스 계열 · 헤드라인 무료"],
+          ["Nasdaq.com", "https://www.nasdaq.com/market-activity/stocks/" + lo + "/news-headlines", Y, "거래소 사이트 · 통신사 기사 모음"],
+          ["Reuters", "https://www.reuters.com/site-search/?query=" + e, P, "통신사 원문 · 월 일부 기사 무료"],
+          ["Google Finance", "https://www.google.com/finance/quote/" + e + ":" + (EX[t] === "AMEX" ? "NYSEAMERICAN" : (EX[t] || "NASDAQ")), Y, "여러 매체 기사를 시간순으로"],
+          ["Benzinga", "https://www.benzinga.com/quote/" + e + "/news", Y, "속보·애널리스트 목표가 변경"],
+          ["Seeking Alpha", "https://seekingalpha.com/symbol/" + e + "/news", P, "뉴스 무료 · 분석 글은 유료"],
+          ["Finviz", "https://finviz.com/quote.ashx?t=" + e, Y, "여러 매체 헤드라인을 한 표로"],
+          ["보도자료 (SEC 8-K)", secType(t, t === "STM" || t === "ASML" ? "6-K" : "8-K"), Y, "회사가 직접 낸 공식 발표"],
+          ["구글 뉴스 (한국어)", "https://news.google.com/search?q=" + encodeURIComponent((nm || t) + " 주가") + "&hl=ko&gl=KR&ceid=KR:ko", Y, "국내 매체 기사"]
+        ];
+      }
+      var grid = document.getElementById("news-sym"); grid.textContent = "";
+      src.forEach(function(x){
+        if (!x[1]) return;
+        var a = ext(x[1], null, "news-card"), top = el("span", {"class":"nc-top"});
+        top.appendChild(el("b", null, x[0]));
+        top.appendChild(el("span", {"class":"free " + (x[2] === Y ? "y" : "p")}, x[2]));
+        a.appendChild(top);
+        a.appendChild(el("span", {"class":"nc-why"}, x[3]));
+        grid.appendChild(a);
+      });
+
+      var box = document.getElementById("news-links"); box.textContent = "";
       [
-        [t + " 구글 뉴스", "https://news.google.com/search?q=" + q + "&hl=ko&gl=KR&ceid=KR:ko"],
-        [t + " Finviz 뉴스", isForeign(t) ? null : "https://finviz.com/quote.ashx?t=" + encodeURIComponent(t)],
+        ["Yahoo Finance 뉴스", "https://finance.yahoo.com/topic/stock-market-news/"],
+        ["Investing.com 주식 뉴스", "https://www.investing.com/news/stock-market-news"],
         ["Finviz 헤드라인", "https://finviz.com/news.ashx"],
+        ["AP 경제", "https://apnews.com/business"],
         ["Reuters 마켓", "https://www.reuters.com/markets/"],
         ["CNBC", "https://www.cnbc.com/world/"],
         ["한경 글로벌마켓", "https://www.hankyung.com/globalmarket"],
