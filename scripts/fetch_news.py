@@ -5,6 +5,7 @@ GitHub Actions가 30분마다 실행한다 (.github/workflows/news.yml).
 여러 매체 기사가 들어옴), Nasdaq RSS, SEC 8-K/6-K 공시 피드.
 표준 라이브러리만 사용한다.
 """
+import gzip
 import json
 import re
 import sys
@@ -18,16 +19,22 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 UA_BROWSER = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
-UA_SEC = "MarketDesk personal site JPark-claude@users.noreply.github.com"
+UA_SEC = "MarketDesk JPark-claude@users.noreply.github.com"
 MAX_PER_TICKER = 60
 MAX_AGE_DAYS = 21
 FOREIGN_FILERS = {"STM", "ASML"}  # 20-F/6-K 제출 기업
 
 
 def get(url, ua=UA_BROWSER, timeout=20):
-    req = urllib.request.Request(url, headers={"User-Agent": ua, "Accept": "application/rss+xml, application/atom+xml, application/xml, text/xml, */*"})
+    headers = {"User-Agent": ua, "Accept": "application/rss+xml, application/atom+xml, application/xml, text/xml, */*", "Accept-Encoding": "gzip, deflate"}
+    if "sec.gov" in url:
+        headers["Host"] = "www.sec.gov"
+    req = urllib.request.Request(url, headers=headers)
     with urllib.request.urlopen(req, timeout=timeout) as r:
-        return r.read()
+        data = r.read()
+        if r.headers.get("Content-Encoding") == "gzip":
+            data = gzip.decompress(data)
+        return data
 
 
 def to_iso(text):
@@ -114,7 +121,7 @@ def collect(tk):
                 x["lang"] = lang
                 items.append(x)
         except Exception as ex:  # 한 출처가 실패해도 나머지는 계속
-            errors.append("%s: %s" % (type(ex).__name__, str(ex)[:80]))
+            errors.append("%s %s: %s" % (getattr(job, "label", ""), type(ex).__name__, str(ex)[:80]))
         time.sleep(0.4)
 
     cutoff = datetime.now(timezone.utc) - timedelta(days=MAX_AGE_DAYS)
@@ -127,7 +134,10 @@ def collect(tk):
             continue
         seen.add(key)
         kept.append(x)
-    return kept[:MAX_PER_TICKER], errors
+    sec = [x for x in kept if x["via"] == "SEC"][:5]  # 공시는 개수 제한에 밀려나지 않게
+    rest = [x for x in kept if x["via"] != "SEC"][: MAX_PER_TICKER - len(sec)]
+    merged = sorted(sec + rest, key=lambda i: i["time"] or "", reverse=True)
+    return merged, errors
 
 
 def main():

@@ -865,7 +865,7 @@ footer{font-size:12px;color:var(--muted)}
   seg("map-per", function(){ return mapPer; }, function(v){ mapPer = v; store.set("md-map-per", v); });
 
   /* ================= collected news (news.json, 30분마다 GitHub Actions가 갱신) ================= */
-  var TRUSTED = ["Reuters","Bloomberg","CNBC","MarketWatch","Investing.com","Yahoo Finance","Barron's","The Wall Street Journal","WSJ","Financial Times","Nikkei Asia","Nikkei","Associated Press","AP News","Nasdaq","Fortune","Axios","Forbes","Business Insider","The Information","TechCrunch","SEC 공시","연합뉴스","연합인포맥스","한국경제","매일경제","조선비즈","서울경제","머니투데이","이데일리","파이낸셜뉴스","아시아경제","전자신문","디일렉"];
+  var TRUSTED = ["Reuters","Bloomberg","CNBC","MarketWatch","Investing.com","Yahoo Finance","Barron's","The Wall Street Journal","WSJ","Financial Times","Nikkei Asia","Nikkei","Associated Press","AP News","Nasdaq","Fortune","Axios","Forbes","Business Insider","The Information","TechCrunch","SEC 공시","연합뉴스","연합인포맥스","한국경제","매일경제","조선비즈","서울경제","머니투데이","이데일리","파이낸셜뉴스","아시아경제","전자신문","디일렉","이투데이","뉴시스","뉴스1","헤럴드경제","ZDNet Korea","Chosunbiz","Yonhap","Korea Economic Daily","The Korea Herald","The New York Times","The Globe and Mail","Yahoo! Finance","Benzinga","Barron","The Economist","Nikkei Asian Review","Investor's Business Daily","Wccftech","Tom's Hardware","EE Times","DigiTimes"];
   function isTrusted(src){ src = src || ""; return TRUSTED.some(function(t){ return src === t || src.indexOf(t) === 0; }); }
   var newsData = null, newsLoadedAt = 0, newsLang = "all";
   function loadNews(){
