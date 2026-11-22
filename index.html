@@ -239,7 +239,12 @@ textarea{width:100%;min-height:150px;resize:vertical;line-height:1.6}
 .note-tag.buy{background:var(--ok-soft);color:var(--ok)}
 .note-tag.sell{background:var(--warn-soft);color:var(--warn)}
 .note-body{white-space:pre-wrap;word-break:break-word;font-size:14px;line-height:1.6}
-.note-del{margin-left:auto;padding:2px 8px;font-size:12px}
+.note-edit-btn{margin-left:auto;padding:2px 8px;font-size:12px}
+.note-del{padding:2px 8px;font-size:12px}
+.edited{font-size:11.5px;font-style:italic}
+.note-edit{display:flex;flex-direction:column;gap:8px}
+.note-edit textarea{min-height:110px}
+.edit-t{font-family:var(--font-mono);text-transform:uppercase;width:150px}
 .notes .nempty{padding:20px 2px;color:var(--muted);font-size:13.5px}
 footer{font-size:12px;color:var(--muted)}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
@@ -1385,7 +1390,42 @@ footer{font-size:12px;color:var(--muted)}
     memo.value = ""; saveDraft(); clearArmed = false; clearBtn.textContent = "비우기";
   });
 
-  var armedDel = null;
+  var armedDel = null, editingId = null;
+  var TAGS = ["메모","매수","매도","관찰","계획","복기"];
+  function editForm(n){
+    var f = el("form", {"class":"note-edit"});
+    var row = el("div", {"class":"row"});
+    var tg = el("select", {"aria-label":"종류"});
+    TAGS.forEach(function(t){ var o = el("option", null, t); if (t === (n.tag || "메모")) o.selected = true; tg.appendChild(o); });
+    var tk = el("input", {"class":"edit-t", maxlength:"16", placeholder:"종목 (선택)", "aria-label":"종목"}); tk.value = n.t || "";
+    row.appendChild(tg); row.appendChild(tk); f.appendChild(row);
+    var ta = el("textarea", {"aria-label":"메모 내용"}); ta.value = n.text; f.appendChild(ta);
+    var btns = el("div", {"class":"row"});
+    btns.appendChild(el("button", {type:"submit", "class":"primary"}, "수정 저장"));
+    var cancel = el("button", {type:"button"}, "취소"); btns.appendChild(cancel);
+    btns.appendChild(el("span", {"class":"muted small"}, "Ctrl+Enter 저장 · Esc 취소"));
+    f.appendChild(btns);
+    function commit(){
+      var text = ta.value.trim();
+      if (!text){ ta.focus(); return; }
+      var changed = text !== n.text || tg.value !== (n.tag || "메모") || clean(tk.value) !== (n.t || "");
+      if (changed){
+        var backup = {text: n.text, tag: n.tag, t: n.t, edited: n.edited};
+        n.text = text; n.tag = tg.value; n.t = clean(tk.value); n.edited = new Date().toISOString();
+        if (!saveNotes()){ n.text = backup.text; n.tag = backup.tag; n.t = backup.t; n.edited = backup.edited; memoState.textContent = "이 브라우저에서는 저장할 수 없어요"; }
+        else memoState.textContent = "메모를 수정했어요";
+      }
+      editingId = null; renderNotes();
+    }
+    f.addEventListener("submit", function(e){ e.preventDefault(); commit(); });
+    ta.addEventListener("keydown", function(e){
+      if (e.key === "Enter" && (e.ctrlKey || e.metaKey)){ e.preventDefault(); commit(); }
+      if (e.key === "Escape"){ editingId = null; renderNotes(); }
+    });
+    cancel.addEventListener("click", function(){ editingId = null; renderNotes(); });
+    setTimeout(function(){ ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); }, 0);
+    return f;
+  }
   function renderNotes(){
     var box = document.getElementById("notes"); box.textContent = "";
     var q = document.getElementById("notes-q").value.trim().toLowerCase(), tf = document.getElementById("notes-tag").value;
@@ -1406,14 +1446,18 @@ footer{font-size:12px;color:var(--muted)}
         tb.addEventListener("click", function(){ go("chart", n.t); });
         head.appendChild(tb);
       }
+      if (n.edited) head.appendChild(el("span", {"class":"edited", title: "수정 " + fmtWhen(n.edited)}, "수정됨 " + fmtWhen(n.edited).slice(5)));
+      var edit = el("button", {type:"button", "class":"note-edit-btn"}, "수정");
+      edit.addEventListener("click", function(){ editingId = n.id; armedDel = null; renderNotes(); });
+      if (editingId !== n.id) head.appendChild(edit);
       var del = el("button", {type:"button", "class":"note-del"}, armedDel === n.id ? "정말 삭제" : "삭제");
       del.addEventListener("click", function(){
         if (armedDel !== n.id){ armedDel = n.id; renderNotes(); setTimeout(function(){ if (armedDel === n.id){ armedDel = null; renderNotes(); } }, 3000); return; }
         notes = notes.filter(function(x){ return x.id !== n.id; }); armedDel = null; saveNotes(); renderNotes();
       });
-      head.appendChild(del);
+      if (editingId !== n.id) head.appendChild(del);
       li.appendChild(head);
-      li.appendChild(el("div", {"class":"note-body"}, n.text));
+      li.appendChild(editingId === n.id ? editForm(n) : el("div", {"class":"note-body"}, n.text));
       box.appendChild(li);
     });
   }
@@ -1445,7 +1489,9 @@ footer{font-size:12px;color:var(--muted)}
         var added = 0;
         list.forEach(function(n){
           if (!n || typeof n.text !== "string" || !n.at || have[n.id]) return;
-          notes.push({id: String(n.id || (Date.now().toString(36) + added)), at: String(n.at), tag: String(n.tag || "메모"), t: clean(n.t || ""), text: n.text});
+          var nn = {id: String(n.id || (Date.now().toString(36) + added)), at: String(n.at), tag: String(n.tag || "메모"), t: clean(n.t || ""), text: n.text};
+          if (n.edited) nn.edited = String(n.edited);
+          notes.push(nn);
           added++;
         });
         notes.sort(function(a, b){ return b.at.localeCompare(a.at); });
