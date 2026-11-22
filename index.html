@@ -186,6 +186,9 @@ td:first-child{font-family:var(--font-mono);font-weight:600}
 .codes b{font-family:var(--font-mono);background:var(--accent-soft);color:var(--accent);border-radius:4px;padding:0 6px;min-width:24px;text-align:center}
 .note{font-size:12.5px;color:var(--muted);margin:0}
 .nf{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#news-box{display:flex;flex-direction:column;gap:10px}
+#news-box[hidden]{display:none}
+.nf[hidden],.nlist[hidden]{display:none}
 .chk{display:inline-flex;align-items:center;gap:6px;font-size:13px;cursor:pointer}
 .chk input{width:16px;height:16px;accent-color:var(--accent)}
 #news-source{max-width:200px}
@@ -399,6 +402,12 @@ footer{font-size:12px;color:var(--muted)}
           </div>
         </div>
         <div id="news-box">
+          <div class="nf">
+            <div class="seg" role="group" aria-label="보기 방식" id="news-feed">
+              <button type="button" data-v="list" aria-pressed="true">기사 목록</button>
+              <button type="button" data-v="live" aria-pressed="false">실시간 (TradingView)</button>
+            </div>
+          </div>
           <div class="nf" id="news-filter">
             <div class="seg" role="group" aria-label="언어" id="news-lang">
               <button type="button" data-v="all" aria-pressed="true">전체</button>
@@ -744,8 +753,13 @@ footer{font-size:12px;color:var(--muted)}
     news: function(){
       var box = document.getElementById("news-box"), tvb = document.getElementById("tv-news");
       if (newsMode === "symbol"){
-        box.hidden = false; tvb.hidden = true;
-        renderNewsList();
+        box.hidden = false;
+        var live = newsFeed === "live";
+        document.getElementById("news-filter").hidden = live;
+        document.getElementById("news-list").hidden = live;
+        tvb.hidden = !live;
+        if (live) tvWidget("tv-news", "timeline", {width:"100%", height:"100%", displayMode:"regular", feedMode:"symbol", symbol: tvSym(cur)});
+        else renderNewsList();
       } else {
         box.hidden = true; tvb.hidden = false;
         var cfg = {width:"100%", height:"100%", displayMode:"regular"};
@@ -859,6 +873,7 @@ footer{font-size:12px;color:var(--muted)}
     function sync(){ Array.prototype.forEach.call(box.querySelectorAll("button"), function(b){ b.setAttribute("aria-pressed", (b.getAttribute("data-mode") || b.getAttribute("data-v")) === getv() ? "true" : "false"); }); }
     box.addEventListener("click", function(e){ var b = e.target.closest("button"); if (!b) return; setv(b.getAttribute("data-mode") || b.getAttribute("data-v")); sync(); renderView(active); });
     sync();
+    return sync;
   }
   seg("news-seg", function(){ return newsMode; }, function(v){ newsMode = v; });
   seg("map-src", function(){ return mapSrc; }, function(v){ mapSrc = v; store.set("md-map-src", v); });
@@ -867,7 +882,7 @@ footer{font-size:12px;color:var(--muted)}
   /* ================= collected news (news.json, 30분마다 GitHub Actions가 갱신) ================= */
   var TRUSTED = ["Reuters","Bloomberg","CNBC","MarketWatch","Investing.com","Yahoo Finance","Barron's","The Wall Street Journal","WSJ","Financial Times","Nikkei Asia","Nikkei","Associated Press","AP News","Nasdaq","Fortune","Axios","Forbes","Business Insider","The Information","TechCrunch","SEC 공시","연합뉴스","연합인포맥스","한국경제","매일경제","조선비즈","서울경제","머니투데이","이데일리","파이낸셜뉴스","아시아경제","전자신문","디일렉","이투데이","뉴시스","뉴스1","헤럴드경제","ZDNet Korea","Chosunbiz","Yonhap","Korea Economic Daily","The Korea Herald","The New York Times","The Globe and Mail","Yahoo! Finance","Benzinga","Barron","The Economist","Nikkei Asian Review","Investor's Business Daily","Wccftech","Tom's Hardware","EE Times","DigiTimes"];
   function isTrusted(src){ src = src || ""; return TRUSTED.some(function(t){ return src === t || src.indexOf(t) === 0; }); }
-  var newsData = null, newsLoadedAt = 0, newsLang = "all";
+  var newsData = null, newsLoadedAt = 0, newsLang = "all", newsFeed = "list";
   function loadNews(){
     if (newsData && Date.now() - newsLoadedAt < 10 * 60000) return;
     newsLoadedAt = Date.now();
@@ -888,19 +903,78 @@ footer{font-size:12px;color:var(--muted)}
     var z = zoned("Asia/Seoul", new Date(iso));
     return z.mo + "/" + z.d + " " + pad(z.h) + ":" + pad(z.mi);
   }
+  /* 수집 목록에 없는 종목: 브라우저에서 바로 Yahoo Finance·Google News RSS를 불러온다 (rss2json 경유, 10분 캐시) */
+  var liveNews = {}, livePending = {};
+  function rssUrl(u){ return "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(u); }
+  function gnewsUrl(q, ko){
+    return "https://news.google.com/rss/search?q=" + encodeURIComponent(q) + (ko ? "&hl=ko&gl=KR&ceid=KR:ko" : "&hl=en-US&gl=US&ceid=US:en");
+  }
+  function rssItems(json, via, lang, defSource){
+    if (!json || json.status !== "ok" || !Array.isArray(json.items)) return [];
+    return json.items.map(function(it){
+      var title = (it.title || "").replace(/\s+/g, " ").trim(), source = defSource;
+      var m = !defSource && title.match(/^(.*) - ([^-]{2,60})$/);
+      if (m){ title = m[1].trim(); source = m[2].trim(); }
+      var time = it.pubDate ? new Date(it.pubDate.replace(" ", "T") + "Z").toISOString() : null;
+      return {title: title, url: it.link || "", source: source || via, time: time, via: via, lang: lang};
+    }).filter(function(x){ return x.title && /^https?:\/\//.test(x.url); });
+  }
+  function fetchLive(t){
+    if (livePending[t]) return;
+    var c = liveNews[t]; if (c && Date.now() - c.at < 10 * 60000) return;
+    livePending[t] = true;
+    var nm = nameOf(t), parts = t.split(":"), code = parts[parts.length - 1];
+    var en = isForeign(t) ? code + " " + (nm || "") + " stock" : '"' + t + '" stock';
+    var jobs = [
+      [rssUrl("https://feeds.finance.yahoo.com/rss/2.0/headline?s=" + encodeURIComponent(isForeign(t) ? yahooSym(t) : t) + "&region=US&lang=en-US"), "Yahoo Finance", "en", "Yahoo Finance"],
+      [rssUrl(gnewsUrl(en + " when:7d", false)), "Google News", "en", null]
+    ];
+    if (nm && /[가-힣]/.test(nm)) jobs.push([rssUrl(gnewsUrl(nm + " 주가 when:7d", true)), "Google News", "ko", null]);
+    Promise.all(jobs.map(function(j){
+      return fetch(j[0]).then(function(r){ return r.ok ? r.json() : null; }).then(function(d){ return rssItems(d, j[1], j[2], j[3]); }).catch(function(){ return []; });
+    })).then(function(lists){
+      var all = [].concat.apply([], lists), seen = {}, items = [];
+      all.sort(function(a, b){ return (b.time || "").localeCompare(a.time || ""); }).forEach(function(x){
+        var k = x.title.toLowerCase().replace(/[^0-9a-z가-힣]/g, "").slice(0, 70);
+        if (seen[k]) return; seen[k] = 1; items.push(x);
+      });
+      liveNews[t] = {at: Date.now(), items: items.slice(0, 60), live: true};
+      livePending[t] = false;
+      if (active === "news" && newsMode === "symbol" && cur === t) renderNewsList();
+    });
+  }
+  function newsEntry(t){
+    var collected = newsData && !newsData.error && newsData.tickers && newsData.tickers[t];
+    if (collected && collected.items && collected.items.length) return collected;
+    return liveNews[t] || null;
+  }
+
   function renderNewsList(){
     var list = document.getElementById("news-list"), upd = document.getElementById("news-upd"), sel = document.getElementById("news-source");
     list.textContent = "";
     function empty(msg){ list.appendChild(el("li", {"class":"nempty"}, msg)); }
     if (!newsData){ empty("뉴스를 불러오는 중이에요…"); loadNews(); return; }
     loadNews();
-    if (newsData.error){ empty("아직 수집된 뉴스가 없어요. 자동 수집이 처음 돌고 나면(최대 30분) 여기에 기사가 떠요. 그동안은 위의 종목 뉴스 사이트나 '미국 증시' 탭을 이용하세요."); upd.textContent = ""; return; }
-    upd.textContent = "수집 " + ago(newsData.updated);
-    var entry = newsData.tickers && newsData.tickers[cur];
-    if (!entry){ sel.textContent = ""; empty(cur + "은(는) 아직 뉴스 수집 목록에 없어요. Claude에게 '" + cur + " 뉴스 수집 추가해줘'라고 하면 다음 수집부터 들어와요."); return; }
+    var t = cur, entry = newsEntry(t);
+    if (!entry){
+      fetchLive(t);
+      sel.textContent = ""; upd.textContent = "";
+      empty(t + " 뉴스를 Yahoo Finance·Google News에서 불러오는 중이에요…");
+      return;
+    }
+    if (entry.live){ upd.textContent = "방금 검색 · " + ago(new Date(entry.at).toISOString()); }
+    else upd.textContent = "자동 수집 " + ago(newsData.updated);
     var items = entry.items || [];
-    var prevSel = sel.value;
-    var counts = {};
+    if (entry.live && !items.length){
+      sel.textContent = "";
+      var li = el("li", {"class":"nempty"});
+      li.appendChild(document.createTextNode(t + " 뉴스를 찾지 못했어요. 티커가 맞는지 확인하거나 "));
+      var b = el("button", {type:"button", "class":"chip"}, "실시간 (TradingView)로 보기");
+      b.addEventListener("click", function(){ newsFeed = "live"; syncFeed(); renderView("news"); });
+      li.appendChild(b); list.appendChild(li);
+      return;
+    }
+    var prevSel = sel.value, counts = {};
     items.forEach(function(x){ if (newsLang === "all" || x.lang === newsLang) counts[x.source] = (counts[x.source] || 0) + 1; });
     sel.textContent = "";
     sel.appendChild(el("option", {value:""}, "모든 매체"));
@@ -925,11 +999,12 @@ footer{font-size:12px;color:var(--muted)}
       li.appendChild(meta);
       list.appendChild(li);
     });
-    if (entry.stale) list.insertBefore(el("li", {"class":"nempty"}, "이번 수집에 실패해 이전 기사를 보여주고 있어요."), list.firstChild);
+    if (entry.stale) list.insertBefore(el("li", {"class":"nempty"}, "이번 자동 수집에 실패해 이전 기사를 보여주고 있어요."), list.firstChild);
   }
   document.getElementById("news-trusted").addEventListener("change", renderNewsList);
   document.getElementById("news-source").addEventListener("change", renderNewsList);
   seg("news-lang", function(){ return newsLang; }, function(v){ newsLang = v; });
+  var syncFeed = seg("news-feed", function(){ return newsFeed; }, function(v){ newsFeed = v; });
   setInterval(function(){ if (active === "news" && newsMode === "symbol"){ newsLoadedAt = 0; loadNews(); } }, 15 * 60000);
 
   /* ================= ticker tape (always) ================= */
