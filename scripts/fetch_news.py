@@ -2,7 +2,7 @@
 
 GitHub Actions가 30분마다 실행한다 (.github/workflows/news.yml).
 출처: Yahoo Finance RSS, Google News RSS(영문·국문, Reuters·CNBC·Investing.com 등
-여러 매체 기사가 들어옴), Nasdaq RSS, SEC 8-K/6-K 공시 피드.
+여러 매체 기사가 들어옴), Nasdaq RSS.
 표준 라이브러리만 사용한다.
 """
 import gzip
@@ -111,8 +111,7 @@ def collect(tk):
     ]
     if not foreign:
         jobs.append(("en", lambda: parse_rss(get("https://www.nasdaq.com/feed/rssoutbound?symbol=" + urllib.parse.quote(t)), "Nasdaq", "Nasdaq")))
-        form = "6-K" if t in FOREIGN_FILERS else "8-K"
-        jobs.append(("en", lambda: parse_sec_atom(get("https://www.sec.gov/cgi-bin/browse-edgar?" + urllib.parse.urlencode({"action": "getcompany", "CIK": t, "type": form, "count": "10", "output": "atom"}), ua=UA_SEC))))
+        # SEC 8-K 피드는 GitHub 서버에서 접속을 막아(403) 수집하지 않는다. 공시는 공시 탭 링크로 본다.
 
     items, errors = [], []
     for lang, job in jobs:
