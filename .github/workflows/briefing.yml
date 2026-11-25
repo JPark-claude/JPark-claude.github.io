@@ -1,0 +1,38 @@
+name: 모닝 브리핑 자료
+
+on:
+  schedule:
+    - cron: "30 22 * * 1-5"   # 화~토 오전 7:30 KST (미국 월~금 장 마감 뒤)
+  workflow_dispatch:
+  push:
+    paths:
+      - scripts/build_briefing.py
+      - .github/workflows/briefing.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: briefing
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 브리핑 자료 모으기
+        run: python scripts/build_briefing.py
+      - name: 저장
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add briefing.json
+          if git diff --cached --quiet; then echo "변경 없음"; exit 0; fi
+          git commit -m "모닝 브리핑 자료 $(TZ=Asia/Seoul date +'%Y-%m-%d %H:%M') KST"
+          git pull --rebase --autostash origin main
+          git push

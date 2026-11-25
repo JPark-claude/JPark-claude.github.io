@@ -15,6 +15,7 @@
   --bg:#f3f5f8; --surface:#ffffff; --ink:#151b26; --muted:#5a6475; --line:#dce1e9;
   --accent:#1d4ed8; --accent-soft:#e6ecfb;
   --ok:#0f7a4a; --ok-soft:#e2f4ea; --warn:#9a5b00; --warn-soft:#fbf0dc; --off:#6b7280; --off-soft:#eceef2;
+  --up:#d92d20; --down:#1d5bd8;
   --z0:#c2410c; --z1:#d97706; --z2:#94a3b8; --z3:#16a34a; --z4:#15803d;
   --font-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
   --font-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
@@ -25,14 +26,14 @@
   :root:not([data-theme="light"]){
     --bg:#0d1219; --surface:#151c27; --ink:#e5eaf1; --muted:#8e99ab; --line:#263041;
     --accent:#7aa2ff; --accent-soft:#1c2a47;
-    --ok:#4cc38a; --ok-soft:#13301f; --warn:#e8b04f; --warn-soft:#33270f; --off:#9aa3b2; --off-soft:#212a37;
+    --up:#ff6b5e; --down:#6aa0ff; --ok:#4cc38a; --ok-soft:#13301f; --warn:#e8b04f; --warn-soft:#33270f; --off:#9aa3b2; --off-soft:#212a37;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0d1219; --surface:#151c27; --ink:#e5eaf1; --muted:#8e99ab; --line:#263041;
   --accent:#7aa2ff; --accent-soft:#1c2a47;
-  --ok:#4cc38a; --ok-soft:#13301f; --warn:#e8b04f; --warn-soft:#33270f; --off:#9aa3b2; --off-soft:#212a37;
+  --up:#ff6b5e; --down:#6aa0ff; --ok:#4cc38a; --ok-soft:#13301f; --warn:#e8b04f; --warn-soft:#33270f; --off:#9aa3b2; --off-soft:#212a37;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -185,6 +186,34 @@ td:first-child{font-family:var(--font-mono);font-weight:600}
 .codes div{display:flex;gap:10px;align-items:baseline;font-size:13px}
 .codes b{font-family:var(--font-mono);background:var(--accent-soft);color:var(--accent);border-radius:4px;padding:0 6px;min-width:24px;text-align:center}
 .note{font-size:12.5px;color:var(--muted);margin:0}
+.brief-ai{display:flex;flex-direction:column;gap:10px}
+.brief-ai:empty{display:none}
+.brief-ai .bh{font-size:17px;font-weight:700;line-height:1.45;text-wrap:balance}
+.brief-ai .bsec{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.brief-ai h3{margin-bottom:4px}
+.brief-ai ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font-size:14px;line-height:1.55}
+.brief-ai .src{font-size:12px;margin-left:4px}
+.brief-ai .bmeta{font-size:12px;color:var(--muted)}
+.brief-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px}
+@media (max-width:960px){.brief-grid{grid-template-columns:1fr}}
+.brief-col{display:flex;flex-direction:column;gap:6px;min-width:0}
+.brief-tbl td,.brief-tbl th{padding:5px 8px}
+.brief-tbl td{font-family:var(--font-mono);font-variant-numeric:tabular-nums;text-align:right}
+.brief-tbl td:first-child{font-family:var(--font-body);font-weight:500;text-align:left}
+.up{color:var(--up)}.down{color:var(--down)}
+.movers{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mv-h{font-size:12px;font-weight:600}
+.mv{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column}
+.mv li{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.mv li button{background:none;border:0;padding:0;font:inherit;color:var(--ink);cursor:pointer;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mv li button:hover{color:var(--accent)}
+.mv li b{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.hl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.hl li{padding:7px 0;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:2px}
+.hl li:last-child{border-bottom:0}
+.hl a{font-size:14px;font-weight:600;color:var(--ink);line-height:1.45}
+.hl a:hover{color:var(--accent)}
+.hl .nmeta{font-size:12px}
 .nf{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 #news-box{display:flex;flex-direction:column;gap:10px}
 #news-box[hidden]{display:none}
@@ -295,6 +324,31 @@ footer{font-size:12px;color:var(--muted)}
         <span class="muted small" id="fomc-when"></span>
       </div>
     </div>
+
+    <section class="panel" id="briefing" aria-label="모닝 브리핑">
+      <div class="panel-head">
+        <h2>모닝 브리핑</h2>
+        <span class="muted small" id="brief-when">매일 오전 8시 (화~토) · 미국장 마감 기준</span>
+      </div>
+      <div id="brief-ai" class="brief-ai"></div>
+      <div class="brief-grid">
+        <div class="brief-col">
+          <h3 id="brief-mkt-title">미국장 마감</h3>
+          <div class="tbl-wrap"><table class="brief-tbl" id="brief-mkts"></table></div>
+        </div>
+        <div class="brief-col">
+          <h3>관심 종목 등락</h3>
+          <div class="movers">
+            <div><span class="mv-h up">많이 오른 종목</span><ol class="mv" id="brief-up"></ol></div>
+            <div><span class="mv-h down">많이 내린 종목</span><ol class="mv" id="brief-down"></ol></div>
+          </div>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="brief-col"><h3>증시 헤드라인</h3><ol class="hl" id="brief-mnews"></ol></div>
+        <div class="brief-col"><h3>AI·테크 헤드라인</h3><ol class="hl" id="brief-anews"></ol></div>
+      </div>
+    </section>
 
     <section class="panel" id="sentiment" aria-label="종합 심리지수">
       <div class="panel-head">
@@ -1055,6 +1109,104 @@ footer{font-size:12px;color:var(--muted)}
   seg("news-lang", function(){ return newsLang; }, function(v){ newsLang = v; });
   var syncFeed = seg("news-feed", function(){ return newsFeed; }, function(v){ newsFeed = v; });
   setInterval(function(){ if (active === "news" && newsMode === "symbol"){ newsLoadedAt = 0; loadNews(); } }, 15 * 60000);
+
+  /* ================= morning briefing (briefing.json + briefing-ai.json) ================= */
+  function num(v, d){ return v == null ? "—" : v.toLocaleString("en-US", {minimumFractionDigits: d, maximumFractionDigits: d}); }
+  function signed(v, d, suf){ if (v == null) return "—"; return (v > 0 ? "+" : v < 0 ? "−" : "") + num(Math.abs(v), d) + (suf || ""); }
+  function dirCls(v, invert){ if (!v) return ""; var up = v > 0; if (invert) up = !up; return up ? "up" : "down"; }
+  function fmtMarket(m){
+    if (m.kind === "yield") return [num(m.close, 2) + "%", signed(m.chg * 100, 1, "bp"), m.chg];
+    if (m.kind === "fx") return [num(m.close, m.symbol === "KRW=X" ? 1 : 2), signed(m.pct, 2, "%"), m.pct];
+    if (m.kind === "crypto") return ["$" + num(m.close, 0), signed(m.pct, 2, "%"), m.pct];
+    return [num(m.close, 2), signed(m.pct, 2, "%"), m.pct];
+  }
+  function headlineList(id, items){
+    var ol = document.getElementById(id); ol.textContent = "";
+    if (!items || !items.length){ ol.appendChild(el("li", {"class":"nempty"}, "헤드라인이 아직 없어요.")); return; }
+    items.slice(0, 8).forEach(function(x){
+      if (!/^https?:\/\//.test(x.url)) return;
+      var li = el("li"); li.appendChild(ext(x.url, x.title));
+      var meta = el("div", {"class":"nmeta"});
+      meta.appendChild(el("span", {"class":"nsrc" + (x.trusted ? " tr" : "")}, x.source || ""));
+      if (x.time) meta.appendChild(el("span", null, kstStamp(x.time)));
+      li.appendChild(meta); ol.appendChild(li);
+    });
+  }
+  function renderBriefing(b, ai){
+    var when = document.getElementById("brief-when");
+    if (!b){
+      when.textContent = "매일 오전 8시 (화~토) · 첫 브리핑은 다음 평일 아침에 올라와요";
+      ["brief-mkts","brief-up","brief-down","brief-mnews","brief-anews"].forEach(function(id){ document.getElementById(id).textContent = ""; });
+      document.getElementById("brief-mnews").appendChild(el("li", {"class":"nempty"}, "아직 브리핑 자료가 없어요."));
+      return;
+    }
+    var g = zoned("Asia/Seoul", new Date(b.generated));
+    when.textContent = g.mo + "월 " + g.d + "일(" + WD[g.wd] + ") " + pad(g.h) + ":" + pad(g.mi) + " 기준";
+    if (b.us_session){ var p = b.us_session.split("-"); document.getElementById("brief-mkt-title").textContent = "미국장 마감 · " + (+p[1]) + "/" + (+p[2]) + " (현지)"; }
+    var t = document.getElementById("brief-mkts"); t.textContent = "";
+    var hr = el("tr"); ["", "종가", "등락"].forEach(function(h){ hr.appendChild(el("th", null, h)); }); var th = el("thead"); th.appendChild(hr); t.appendChild(th);
+    var tb = el("tbody");
+    (b.markets || []).forEach(function(m){
+      var f = fmtMarket(m), tr = el("tr");
+      tr.appendChild(el("td", null, m.name));
+      tr.appendChild(el("td", null, f[0]));
+      tr.appendChild(el("td", {"class": dirCls(f[2])}, f[1]));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    var mv = (b.movers || []).filter(function(m){ return m.pct != null; });
+    function moverList(id, arr){
+      var ol = document.getElementById(id); ol.textContent = "";
+      arr.forEach(function(m){
+        var li = el("li"), bt = el("button", {type:"button", title: m.t + " 차트"}, m.name + " " + m.t.replace(/^TSE:/, ""));
+        bt.addEventListener("click", function(){ go("chart", m.t); });
+        li.appendChild(bt); li.appendChild(el("b", {"class": dirCls(m.pct)}, signed(m.pct, 2, "%")));
+        ol.appendChild(li);
+      });
+      if (!arr.length) ol.appendChild(el("li", {"class":"muted"}, "—"));
+    }
+    moverList("brief-up", mv.filter(function(m){ return m.pct > 0; }).slice(0, 5));
+    moverList("brief-down", mv.filter(function(m){ return m.pct < 0; }).reverse().slice(0, 5));
+    headlineList("brief-mnews", b.market_news);
+    headlineList("brief-anews", b.ai_news);
+
+    var box = document.getElementById("brief-ai"); box.textContent = "";
+    if (ai && ai.date && ai.date >= b.kst_date){
+      if (ai.headline) box.appendChild(el("div", {"class":"bh"}, ai.headline));
+      var sec = el("div", {"class":"bsec"});
+      function block(title, arr){
+        if (!arr || !arr.length) return;
+        var d = el("div"); d.appendChild(el("h3", null, title));
+        var ul = el("ul");
+        arr.forEach(function(x){
+          var li = el("li");
+          if (typeof x === "string") li.textContent = x;
+          else {
+            li.appendChild(document.createTextNode(x.text || ""));
+            if (x.url && /^https?:\/\//.test(x.url)) li.appendChild(ext(x.url, x.source || "출처", "src"));
+          }
+          ul.appendChild(li);
+        });
+        d.appendChild(ul); sec.appendChild(d);
+      }
+      block("증시", ai.market);
+      block("AI·테크", ai.ai_tech);
+      block("오늘 볼 것", ai.watch);
+      box.appendChild(sec);
+      box.appendChild(el("div", {"class":"bmeta"}, "Claude가 위 자료와 웹 검색을 바탕으로 정리한 요약이에요. 투자 판단의 근거로 쓰기 전에 원문을 확인하세요."));
+    } else {
+      box.appendChild(el("div", {"class":"bmeta"}, "Claude 요약은 매일 오전 8시 전후로 올라와요. 지금은 자동 수집한 숫자와 헤드라인만 보여드려요."));
+    }
+  }
+  function loadBriefing(){
+    var opt = {cache:"no-store"}, ts = "?ts=" + Math.floor(Date.now() / 300000);
+    Promise.all([
+      fetch("briefing.json" + ts, opt).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; }),
+      fetch("briefing-ai.json" + ts, opt).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; })
+    ]).then(function(res){ renderBriefing(res[0], res[1]); });
+  }
+  loadBriefing();
+  setInterval(loadBriefing, 15 * 60000);
 
   /* ================= ticker tape (always) ================= */
   function renderTape(force){
