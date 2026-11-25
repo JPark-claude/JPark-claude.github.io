@@ -18,7 +18,7 @@
   ],
   "shortcuts": [
     {"name": "테크", "url": "/#tech", "icons": [{"src": "/icons/icon-192.png", "sizes": "192x192"}]},
-    {"name": "차트", "url": "/#chart", "icons": [{"src": "/icons/icon-192.png", "sizes": "192x192"}]},
+    {"name": "리포트", "url": "/#report", "icons": [{"src": "/icons/icon-192.png", "sizes": "192x192"}]},
     {"name": "뉴스", "url": "/#news", "icons": [{"src": "/icons/icon-192.png", "sizes": "192x192"}]},
     {"name": "스톡맵", "url": "/#maps", "icons": [{"src": "/icons/icon-192.png", "sizes": "192x192"}]}
   ]

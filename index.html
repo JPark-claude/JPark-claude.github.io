@@ -289,6 +289,26 @@ textarea{width:100%;min-height:150px;resize:vertical;line-height:1.6}
 .edit-t{font-family:var(--font-mono);text-transform:uppercase;width:150px}
 .notes .nempty{padding:20px 2px;color:var(--muted);font-size:13.5px}
 footer{font-size:12px;color:var(--muted)}
+a.tk{display:inline-block}
+a.tk:hover{text-decoration:none}
+.rep-ov:empty{display:none}
+.rep-ov{font-size:15px;line-height:1.8;max-width:80ch;padding:12px 14px;border-left:3px solid var(--accent);background:var(--bg);border-radius:0 8px 8px 0}
+.reps{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px}
+@media (max-width:640px){.reps{grid-template-columns:1fr}}
+.rep{border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:14px;display:flex;flex-direction:column;gap:8px}
+.rep-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.rep-top b{color:var(--ink);font-size:13.5px}
+.rep-rank{font-family:var(--font-mono);font-weight:600;color:var(--accent)}
+.reg{font-size:11.5px;font-weight:600;padding:1px 8px;border-radius:999px}
+.reg.os{background:var(--accent-soft);color:var(--accent)}
+.reg.kr{background:var(--ok-soft);color:var(--ok)}
+.rep h3{font-size:15.5px;line-height:1.45;margin:0}
+.rep p{margin:0;font-size:14px;line-height:1.7}
+.rep ul{margin:0;padding-left:18px;font-size:13.5px;line-height:1.6;display:flex;flex-direction:column;gap:2px}
+.rep .why{font-size:12.5px;color:var(--muted)}
+.rep .why b{color:var(--ink);font-weight:600}
+.rep-foot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:auto}
+.acc{font-size:11.5px;color:var(--muted)}
 .tv-ov{height:600px}
 .install-btn{font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:999px;background:var(--accent);color:var(--surface);border-color:var(--accent);white-space:nowrap}
 .install-btn:hover{color:var(--surface);filter:brightness(1.08)}
@@ -448,7 +468,7 @@ body{overflow-x:hidden}
           <button class="primary" type="submit">추가</button>
           <button type="button" id="reset-btn">기본 목록으로</button>
         </form>
-        <p class="note">티커를 누르면 차트 탭으로 가요. 해외 종목은 TSE:5802처럼 거래소를 붙여 넣으세요. 목록은 이 브라우저에만 저장돼요.</p>
+        <p class="note">티커를 누르면 TradingView 차트가 새 창으로 열려요. 해외 종목은 TSE:5802처럼 거래소를 붙여 넣으세요. 목록은 이 브라우저에만 저장돼요.</p>
       </section>
     </div>
   </section>
@@ -482,19 +502,24 @@ body{overflow-x:hidden}
     </section>
   </section>
 
-  <!-- ===================== 차트 ===================== -->
-  <section class="view" id="v-chart" role="tabpanel" aria-label="차트">
-    <div class="tv tv-info" id="tv-info"></div>
-    <div class="grid-main">
-      <section class="panel" aria-label="차트">
-        <div class="panel-head"><h2>차트</h2><span class="muted small">지표 추가·기간 변경은 차트 위 메뉴에서</span></div>
-        <div class="tv tv-xl" id="tv-chart"></div>
-      </section>
-      <section class="panel" aria-label="기술적 분석 요약">
-        <div class="panel-head"><h2>기술적 신호 요약</h2><span class="muted small">이동평균·오실레이터 집계</span></div>
-        <div class="tv tv-lg" id="tv-ta"></div>
-      </section>
-    </div>
+  <!-- ===================== 리포트 ===================== -->
+  <section class="view" id="v-report" role="tabpanel" aria-label="리포트">
+    <section class="panel">
+      <div class="panel-head">
+        <h2>주간 증권사 리포트</h2>
+        <div class="row">
+          <div class="seg" role="group" aria-label="증권사 구분" id="rep-src">
+            <button type="button" data-v="all" aria-pressed="true">전체</button>
+            <button type="button" data-v="해외" aria-pressed="false">해외 증권사</button>
+            <button type="button" data-v="국내" aria-pressed="false">국내 증권사</button>
+          </div>
+          <select id="rep-week" aria-label="주차"></select>
+        </div>
+      </div>
+      <p class="note" id="rep-when">매주 토요일 오전 9시 · 미국 증시와 미국 테크 기업 리포트 5~10개 · 중복은 빼고 조회수와 중요도로 골라요</p>
+      <div class="rep-ov" id="rep-ov"></div>
+      <div class="reps" id="rep-list"></div>
+    </section>
   </section>
 
   <!-- ===================== 공시 ===================== -->
@@ -746,6 +771,7 @@ body{overflow-x:hidden}
   }
   var EX = {NVDA:"NASDAQ",PLTR:"NASDAQ",AVGO:"NASDAQ",STM:"NYSE",INTC:"NASDAQ",MRVL:"NASDAQ",MPWR:"NASDAQ",ASML:"NASDAQ",AMAT:"NASDAQ",LRCX:"NASDAQ",FN:"NYSE",COHR:"NYSE",LITE:"NASDAQ",GLW:"NYSE",AAOI:"NASDAQ",POET:"NASDAQ",LWLG:"NASDAQ",AXTI:"NASDAQ",ASTS:"NASDAQ",TSM:"NYSE",AMD:"NASDAQ",MU:"NASDAQ",KLAC:"NASDAQ",ANET:"NYSE",CRDO:"NASDAQ",ALAB:"NASDAQ",CIEN:"NYSE",SOXX:"NASDAQ",SPY:"AMEX",QQQ:"NASDAQ"};
   function tvSym(t){ return isForeign(t) ? t : (EX[t] ? EX[t] + ":" + t : t); }
+  function chartUrl(t){ return "https://www.tradingview.com/chart/?symbol=" + encodeURIComponent(tvSym(t)); }
   function clean(v){ return (v || "").trim().toUpperCase().replace(/[^A-Z0-9.:\-]/g, ""); }
   var SEC = "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&owner=include&count=40&dateb=&CIK=";
   function secType(t, type){ return SEC + encodeURIComponent(t) + "&type=" + encodeURIComponent(type); }
@@ -815,8 +841,8 @@ body{overflow-x:hidden}
   symInput.addEventListener("change", function(){ setSymbol(symInput.value); });
 
   /* ================= tabs ================= */
-  var TABS = [["home","홈"],["tech","테크"],["chart","차트"],["filings","공시"],["earnings","실적"],["news","뉴스"],["insider","내부자거래"],["maps","스톡맵"],["tools","도구"]];
-  var SYMBOL_TABS = {chart:1, filings:1, earnings:1, news:1, insider:1};
+  var TABS = [["home","홈"],["tech","테크"],["report","리포트"],["filings","공시"],["earnings","실적"],["news","뉴스"],["insider","내부자거래"],["maps","스톡맵"],["tools","도구"]];
+  var SYMBOL_TABS = {filings:1, earnings:1, news:1, insider:1};
   var active = "home";
   var tabBox = document.getElementById("tabs");
   TABS.forEach(function(t){
@@ -886,12 +912,7 @@ body{overflow-x:hidden}
       });
       tvWidget("tv-quotes", "market-quotes", {width:"100%", height:"100%", showSymbolLogo:true, symbolsGroups: groups});
     },
-    chart: function(){
-      var s = tvSym(cur);
-      tvWidget("tv-info", "symbol-info", {symbol: s, width:"100%"});
-      tvWidget("tv-chart", "advanced-chart", {autosize:true, symbol: s, interval:"D", timezone:"Asia/Seoul", style:"1", allow_symbol_change:false, calendar:false, hide_volume:false, support_host:"https://www.tradingview.com"});
-      tvWidget("tv-ta", "technical-analysis", {interval:"1D", width:"100%", height:"100%", symbol: s, showIntervalTabs:true, displayMode:"single"});
-    },
+    report: function(){ renderReports(); },
     filings: function(){
       var t = cur, nm = nameOf(t);
       document.getElementById("fil-title").textContent = t + (nm ? " · " + nm : "") + " 공시";
@@ -1329,7 +1350,60 @@ body{overflow-x:hidden}
   seg("tech-topic", function(){ return techTopic; }, function(v){ techTopic = v; });
   document.getElementById("tech-source").addEventListener("change", renderTechList);
 
+  /* ================= 주간 증권사 리포트 (reports.json, 매주 토요일 Claude가 갱신) ================= */
+  var reportsData = null, repSrc = "all", repWeekIdx = 0;
+  function loadReports(){
+    fetch("reports.json?ts=" + Math.floor(Date.now() / 600000), {cache:"no-store"})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){ reportsData = d || {weeks: []}; if (active === "report") renderReports(); })
+      .catch(function(){ reportsData = {weeks: []}; if (active === "report") renderReports(); });
+  }
+  function renderReports(){
+    var list = document.getElementById("rep-list"), ov = document.getElementById("rep-ov"), sel = document.getElementById("rep-week"), when = document.getElementById("rep-when");
+    list.textContent = ""; ov.textContent = "";
+    if (!reportsData){ list.appendChild(el("div", {"class":"wait"}, "불러오는 중이에요…")); loadReports(); return; }
+    var weeks = (reportsData.weeks || []).slice().sort(function(a, b){ return (b.week || "").localeCompare(a.week || ""); });
+    if (!weeks.length){ sel.hidden = true; list.appendChild(el("div", {"class":"wait"}, "첫 리포트 모음은 토요일 오전 9시에 올라와요.")); return; }
+    sel.hidden = weeks.length < 2;
+    if (sel.options.length !== weeks.length){
+      sel.textContent = "";
+      weeks.forEach(function(w, i){ var p = (w.week || "").split("-"); sel.appendChild(el("option", {value: String(i)}, (+p[1]) + "월 " + (+p[2]) + "일 주" + (i === 0 ? " (최신)" : ""))); });
+    }
+    sel.value = String(repWeekIdx);
+    var wk = weeks[repWeekIdx] || weeks[0];
+    if (wk.written){ var z = zoned("Asia/Seoul", new Date(wk.written)); when.textContent = z.mo + "월 " + z.d + "일(" + WD[z.wd] + ") " + pad(z.h) + ":" + pad(z.mi) + " 정리 · 미국 증시·미국 테크 기업 리포트 " + (wk.items || []).length + "개 · 중복 제외, 조회수·중요도 기준"; }
+    if (wk.overview) ov.textContent = wk.overview;
+    var items = (wk.items || []).filter(function(x){ return repSrc === "all" || x.region === repSrc; });
+    if (!items.length){ list.appendChild(el("div", {"class":"wait"}, "이번 주에는 이 구분의 리포트가 없어요.")); return; }
+    items.forEach(function(x){
+      var c = el("article", {"class":"rep"}), top = el("div", {"class":"rep-top"});
+      if (x.rank) top.appendChild(el("span", {"class":"rep-rank"}, "#" + x.rank));
+      top.appendChild(el("span", {"class":"reg " + (x.region === "국내" ? "kr" : "os")}, x.region === "국내" ? "국내" : "해외"));
+      top.appendChild(el("b", null, x.broker || ""));
+      if (x.date) top.appendChild(el("span", null, x.date.slice(5).replace("-", "/")));
+      if (x.category) top.appendChild(el("span", null, "· " + x.category));
+      c.appendChild(top);
+      c.appendChild(el("h3", null, x.title || ""));
+      if (x.tickers && x.tickers.length){
+        var tk = el("div", {"class":"chips"});
+        x.tickers.forEach(function(t){ var b = el("button", {type:"button", "class":"chip", title: t + " 뉴스 보기"}, t); b.addEventListener("click", function(){ go("news", t); }); tk.appendChild(b); });
+        c.appendChild(tk);
+      }
+      if (x.summary) c.appendChild(el("p", null, x.summary));
+      if (x.points && x.points.length){ var ul = el("ul"); x.points.forEach(function(pt){ ul.appendChild(el("li", null, pt)); }); c.appendChild(ul); }
+      if (x.why){ var w = el("div", {"class":"why"}); w.appendChild(el("b", null, "선정 이유 ")); w.appendChild(document.createTextNode(x.why + (x.views ? " · 조회수 " + Number(x.views).toLocaleString("ko-KR") + "회" : ""))); c.appendChild(w); }
+      var foot = el("div", {"class":"rep-foot"});
+      if (x.url && /^https?:\/\//.test(x.url)) foot.appendChild(ext(x.url, x.url_label || "원문 보기", "chip ext"));
+      if (x.access) foot.appendChild(el("span", {"class":"acc"}, x.access));
+      c.appendChild(foot);
+      list.appendChild(c);
+    });
+  }
+  seg("rep-src", function(){ return repSrc; }, function(v){ repSrc = v; });
+  document.getElementById("rep-week").addEventListener("change", function(e){ repWeekIdx = parseInt(e.target.value, 10) || 0; renderReports(); });
+
   /* ================= ticker tape (always) ================= */
+
   function renderTape(force){
     tvWidget("tv-tape", "ticker-tape", {displayMode:"adaptive", showSymbolLogo:true, symbols:[
       {proName:"FOREXCOM:SPXUSD", title:"S&P 500"},{proName:"FOREXCOM:NSXUSD", title:"나스닥 100"},{proName:"NASDAQ:SOXX", title:"반도체 ETF"},
@@ -1351,8 +1425,8 @@ body{overflow-x:hidden}
       box.appendChild(el("div", {"class":"group-name"}, group.g + " · " + group.items.length));
       group.items.forEach(function(it, ii){
         var row = el("div", {"class":"wl-row"});
-        var tk = el("button", {type:"button", "class":"tk", title: it[0] + " 차트 보기"}, it[0]);
-        tk.addEventListener("click", function(){ go("chart", it[0]); });
+        var tk = ext(chartUrl(it[0]), it[0], "tk");
+        tk.title = it[0] + " TradingView 차트 열기";
         row.appendChild(tk);
         row.appendChild(el("span", {"class":"nm", title: it[1]}, it[1]));
         var chips = el("div", {"class":"chips"});
@@ -1412,7 +1486,7 @@ body{overflow-x:hidden}
     b.appendChild(el("span", {"class":"t-name"}, t[0]));
     b.appendChild(el("span", {"class":"t-sym"}, t[1]));
     b.appendChild(el("span", {"class":"t-why"}, t[2]));
-    b.addEventListener("click", function(){ go("chart", t[1]); });
+    b.addEventListener("click", function(){ window.open(chartUrl(t[1]), "_blank", "noopener"); });
     tiles.appendChild(b);
   });
 
@@ -1715,8 +1789,8 @@ body{overflow-x:hidden}
       head.appendChild(el("span", {"class":"when"}, fmtWhen(n.at)));
       head.appendChild(el("span", {"class":"note-tag" + (n.tag === "매수" ? " buy" : n.tag === "매도" ? " sell" : "")}, n.tag || "메모"));
       if (n.t){
-        var tb = el("button", {type:"button", "class":"chip", title: n.t + " 차트 보기"}, n.t);
-        tb.addEventListener("click", function(){ go("chart", n.t); });
+        var tb = ext(chartUrl(n.t), n.t, "chip ext");
+        tb.title = n.t + " TradingView 차트 열기";
         head.appendChild(tb);
       }
       if (n.edited) head.appendChild(el("span", {"class":"edited", title: "수정 " + fmtWhen(n.edited)}, "수정됨 " + fmtWhen(n.edited).slice(5)));
