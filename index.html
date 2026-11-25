@@ -2,7 +2,15 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151c27" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="마켓 데스크">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <title>마켓 데스크</title>
 <meta name="description" content="지표, 차트, 공시, 실적, 뉴스, 내부자거래, 스톡맵을 탭으로 모은 개인 투자 홈">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231d4ed8'/%3E%3Cpath d='M6 22l6-7 5 4 9-10' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
@@ -281,6 +289,55 @@ textarea{width:100%;min-height:150px;resize:vertical;line-height:1.6}
 .edit-t{font-family:var(--font-mono);text-transform:uppercase;width:150px}
 .notes .nempty{padding:20px 2px;color:var(--muted);font-size:13.5px}
 footer{font-size:12px;color:var(--muted)}
+.tv-ov{height:600px}
+.install-btn{font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:999px;background:var(--accent);color:var(--surface);border-color:var(--accent);white-space:nowrap}
+.install-btn:hover{color:var(--surface);filter:brightness(1.08)}
+.head{padding-top:env(safe-area-inset-top)}
+.head-in{padding-left:max(20px, env(safe-area-inset-left));padding-right:max(20px, env(safe-area-inset-right))}
+body{overflow-x:hidden}
+@media (max-width:640px){
+  .head-in{padding-left:max(12px, env(safe-area-inset-left));padding-right:max(12px, env(safe-area-inset-right));gap:10px}
+  h1{font-size:16px}
+  .tabs{-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}
+  .tab{padding:13px 10px 11px;font-size:13.5px}
+  .install-btn{padding:5px 10px;font-size:12px}
+  .wrap{padding:10px max(12px, env(safe-area-inset-left)) calc(40px + env(safe-area-inset-bottom));gap:12px}
+  .panel{padding:12px;gap:10px}
+  .status{grid-template-columns:1fr 1fr;gap:8px}
+  .stat{padding:10px 12px}
+  .stat .big{font-size:18px}
+  .senti-big{font-size:36px}
+  .tv-ov{height:520px}.tv-xl{height:460px}.tv-lg{height:420px}.tv-md{height:420px}.tv-info{height:150px}
+  #tv-map{height:480px!important}
+  .nlist{height:auto;max-height:70vh}
+  input,select,textarea{font-size:16px}
+  .chip,.symchip{padding:6px 10px}
+  .wl-row .chip{padding:5px 9px;font-size:12.5px}
+  .seg button{padding:8px 10px}
+  .panel-head{align-items:flex-start}
+  .panel-head > .row{width:100%}
+  .art .at{font-size:17px}
+  .art p{font-size:15px;line-height:1.75}
+  .brief-tbl td,.brief-tbl th{padding:6px 4px;font-size:13px}
+  #notes-q{flex:1;min-width:0;width:auto}
+  .calc{grid-template-columns:1fr 1fr}
+  .cards{grid-template-columns:1fr}
+  .symbar{padding:8px 10px;gap:8px}
+  #sym{width:110px}
+  .symname{display:none}
+  footer{padding:0 2px}
+  .newsgrid{grid-template-columns:1fr 1fr;gap:6px}
+  .news-card{padding:8px 10px}
+  .news-card .nc-top{flex-direction:column;align-items:flex-start;gap:2px}
+  .news-card b{font-size:13.5px}
+  .news-card .nc-why{font-size:11.5px}
+}
+@media (max-width:380px){
+  .status{grid-template-columns:1fr}
+  .calc{grid-template-columns:1fr}
+  .movers{grid-template-columns:1fr}
+}
+@media (display-mode: standalone){ .install-btn{display:none!important} #install-sec{display:none} }
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -291,6 +348,7 @@ footer{font-size:12px;color:var(--muted)}
     <h1>마켓 데스크</h1>
     <nav class="tabs" role="tablist" id="tabs" aria-label="화면"></nav>
     <span class="clock" id="hclock"></span>
+    <button type="button" class="install-btn" id="install-btn" hidden>앱 설치</button>
   </div>
 </header>
 
@@ -366,16 +424,16 @@ footer{font-size:12px;color:var(--muted)}
 
     <div class="grid2">
       <section class="panel" aria-label="시장 개요">
-        <div class="panel-head"><h2>시장 개요</h2><span class="muted small">지수 · 금리·환율 · 원자재</span></div>
-        <div class="tv tv-md" id="tv-overview"></div>
+        <div class="panel-head"><h2>시장 개요</h2><span class="muted small">지수 · 금리 · 환율 · 원자재 · 코인 12종</span></div>
+        <div class="tv tv-ov" id="tv-overview"></div>
       </section>
       <section class="panel" aria-label="관심 종목 시세">
         <div class="panel-head"><h2>관심 종목 시세</h2><span class="muted small">관심 종목 목록을 따라가요</span></div>
-        <div class="tv tv-md" id="tv-quotes"></div>
+        <div class="tv tv-ov" id="tv-quotes"></div>
       </section>
     </div>
 
-    <div class="grid-main">
+    <div>
       <section class="panel" id="wl-panel" aria-label="관심 종목">
         <div class="panel-head">
           <h2>관심 종목</h2>
@@ -391,10 +449,6 @@ footer{font-size:12px;color:var(--muted)}
           <button type="button" id="reset-btn">기본 목록으로</button>
         </form>
         <p class="note">티커를 누르면 차트 탭으로 가요. 해외 종목은 TSE:5802처럼 거래소를 붙여 넣으세요. 목록은 이 브라우저에만 저장돼요.</p>
-      </section>
-      <section class="panel" aria-label="시장 차트 바로가기">
-        <div class="panel-head"><h2>시장 차트</h2><span class="muted small">누르면 차트 탭에서 열려요</span></div>
-        <div class="tiles" id="tiles"></div>
       </section>
     </div>
   </section>
@@ -639,6 +693,18 @@ footer{font-size:12px;color:var(--muted)}
       <ol class="notes" id="notes"></ol>
       <p class="note">메모는 이 브라우저에만 저장돼요. 브라우저 데이터를 지우거나 다른 기기에서 열면 보이지 않으니, 가끔 '백업 받기'로 파일을 받아 두세요.</p>
     </section>
+    <section class="panel" id="install-sec" aria-label="앱으로 설치">
+      <div class="panel-head">
+        <h2>마켓 데스크를 앱으로 설치</h2>
+        <button type="button" class="primary" id="install-now" hidden>지금 설치</button>
+      </div>
+      <p class="note" id="install-state">홈 화면에 아이콘이 생기고, 주소창 없이 앱처럼 전체 화면으로 열려요. 인터넷이 끊겨도 마지막으로 본 화면은 열려요.</p>
+      <div class="cards">
+        <div class="card"><h3>아이폰 · 아이패드 (사파리)</h3><p>1. 사파리로 이 사이트를 열어요.<br>2. 아래쪽 공유 버튼(네모에 위쪽 화살표)을 눌러요.<br>3. '홈 화면에 추가'를 누르고 '추가'를 눌러요.</p></div>
+        <div class="card"><h3>안드로이드 (크롬)</h3><p>1. 크롬으로 이 사이트를 열어요.<br>2. 위쪽 '앱 설치' 버튼을 누르거나, 오른쪽 위 ⋮ 메뉴에서 '앱 설치' 또는 '홈 화면에 추가'를 눌러요.</p></div>
+        <div class="card"><h3>PC (크롬 · 엣지)</h3><p>주소창 오른쪽의 설치 아이콘(모니터에 아래 화살표)이나 위쪽 '앱 설치' 버튼을 눌러요. 작업 표시줄·독에 고정할 수 있어요.</p></div>
+      </div>
+    </section>
     <div class="sections" id="sections"></div>
   </section>
 
@@ -802,11 +868,18 @@ footer{font-size:12px;color:var(--muted)}
 
   var views = {
     home: function(){
+      var ALL12 = [
+        {s:"FOREXCOM:SPXUSD", d:"S&P 500"},{s:"FOREXCOM:NSXUSD", d:"나스닥 100"},{s:"NASDAQ:SOXX", d:"반도체 ETF (SOXX)"},
+        {s:"CAPITALCOM:VIX", d:"VIX"},{s:"TVC:US10Y", d:"미 10년물 금리"},{s:"CAPITALCOM:DXY", d:"달러 인덱스"},
+        {s:"FX_IDC:USDKRW", d:"원/달러"},{s:"FX:USDJPY", d:"엔/달러"},{s:"AMEX:EWY", d:"한국 ETF (EWY)"},
+        {s:"TVC:USOIL", d:"WTI 유가"},{s:"TVC:GOLD", d:"금"},{s:"BITSTAMP:BTCUSD", d:"비트코인"}
+      ];
       tvWidget("tv-overview", "market-overview", {width:"100%", height:"100%", dateRange:"3M", showChart:true, showSymbolLogo:true, showFloatingTooltip:true,
         tabs:[
-          {title:"지수", symbols:[{s:"FOREXCOM:SPXUSD", d:"S&P 500"},{s:"FOREXCOM:NSXUSD", d:"나스닥 100"},{s:"NASDAQ:SOXX", d:"반도체 ETF (SOXX)"},{s:"CAPITALCOM:VIX", d:"VIX"},{s:"AMEX:EWY", d:"한국 ETF (EWY)"}]},
-          {title:"금리·환율", symbols:[{s:"TVC:US10Y", d:"미 10년물"},{s:"TVC:US02Y", d:"미 2년물"},{s:"CAPITALCOM:DXY", d:"달러 인덱스"},{s:"FX_IDC:USDKRW", d:"원/달러"},{s:"FX:USDJPY", d:"엔/달러"}]},
-          {title:"원자재·코인", symbols:[{s:"TVC:USOIL", d:"WTI 유가"},{s:"TVC:GOLD", d:"금"},{s:"TVC:SILVER", d:"은"},{s:"BITSTAMP:BTCUSD", d:"비트코인"}]}
+          {title:"전체", symbols: ALL12},
+          {title:"지수", symbols: [ALL12[0], ALL12[1], ALL12[2], ALL12[3], ALL12[8]]},
+          {title:"금리·환율", symbols: [ALL12[4], {s:"TVC:US02Y", d:"미 2년물 금리"}, ALL12[5], ALL12[6], ALL12[7]]},
+          {title:"원자재·코인", symbols: [ALL12[9], ALL12[10], {s:"TVC:SILVER", d:"은"}, ALL12[11]]}
         ]});
       var groups = wl.filter(function(g){ return g.items.length; }).map(function(g){
         return {name: g.g, symbols: g.items.map(function(it){ return {name: tvSym(it[0]), displayName: it[1]}; })};
@@ -1165,7 +1238,7 @@ footer{font-size:12px;color:var(--muted)}
         var ul = el("ul"); mk.watch.forEach(function(w){ ul.appendChild(el("li", null, w)); }); am.appendChild(ul);
       }
       if (!fresh) am.appendChild(el("div", {"class":"bmeta"}, "지난 브리핑이에요. 새 글은 다음 평일 오전 8시 전에 올라와요."));
-    } else waitMsg(am, "증시 브리핑 글은 화~토 오전 8시 전에 올라와요. 오른쪽 숫자는 미국장 마감 직후 자동으로 모은 거예요.");
+    } else waitMsg(am, "증시 브리핑 글은 화~토 오전 8시 전에 올라와요. 마감 숫자표는 미국장 마감 직후 자동으로 모은 거예요.");
     if (tc && (tc.body || []).length){
       if (tc.title) at.appendChild(el("h3", {"class":"at"}, tc.title));
       paras(at, tc.body);
@@ -1334,7 +1407,7 @@ footer{font-size:12px;color:var(--muted)}
     ["금","TVC:GOLD","안전자산 · 실질금리"],["비트코인","BITSTAMP:BTCUSD","위험선호 심리"]
   ];
   var tiles = document.getElementById("tiles");
-  TILES.forEach(function(t){
+  if (tiles) TILES.forEach(function(t){
     var b = el("button", {type:"button", "class":"tile"});
     b.appendChild(el("span", {"class":"t-name"}, t[0]));
     b.appendChild(el("span", {"class":"t-sym"}, t[1]));
@@ -1703,6 +1776,35 @@ footer{font-size:12px;color:var(--muted)}
     r.readAsText(f);
   });
   renderNotes();
+
+  /* ================= app install (PWA) ================= */
+  var installBtn = document.getElementById("install-btn"), installNow = document.getElementById("install-now"), installState = document.getElementById("install-state");
+  var deferredPrompt = null;
+  var standalone = (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone === true;
+  var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  if (!standalone && isIOS) installBtn.hidden = false;
+  window.addEventListener("beforeinstallprompt", function(e){
+    e.preventDefault(); deferredPrompt = e;
+    if (!standalone){ installBtn.hidden = false; installNow.hidden = false; }
+  });
+  function doInstall(){
+    if (deferredPrompt){
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function(c){
+        if (c && c.outcome === "accepted"){ installBtn.hidden = true; installNow.hidden = true; installState.textContent = "설치했어요. 홈 화면이나 앱 목록에서 '마켓 데스크'를 찾으세요."; }
+        deferredPrompt = null;
+      });
+    } else {
+      go("tools");
+      setTimeout(function(){ var sec = document.getElementById("install-sec"); if (sec && sec.scrollIntoView) sec.scrollIntoView({behavior:"smooth", block:"start"}); }, 50);
+    }
+  }
+  installBtn.addEventListener("click", doInstall);
+  installNow.addEventListener("click", doInstall);
+  window.addEventListener("appinstalled", function(){ installBtn.hidden = true; installNow.hidden = true; });
+  if ("serviceWorker" in navigator && location.protocol === "https:"){
+    window.addEventListener("load", function(){ navigator.serviceWorker.register("/sw.js").catch(function(){}); });
+  }
 
   /* ================= start ================= */
   renderTape();
