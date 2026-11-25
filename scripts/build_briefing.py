@@ -65,7 +65,7 @@ def is_trusted(src):
     return any(src == t or (src or "").startswith(t) for t in TRUSTED)
 
 
-def headlines(queries, limit):
+def headlines(queries, limit, ko_max=4):
     items = []
     for kind, q in queries:
         try:
@@ -91,7 +91,9 @@ def headlines(queries, limit):
         x.setdefault("lang", "en")
         x["trusted"] = is_trusted(x["source"])
         out.append(x)
-    return out[:limit]
+    ko = [x for x in out if x["lang"] == "ko"][:ko_max]
+    en = [x for x in out if x["lang"] != "ko"][: limit - len(ko)]
+    return en + ko
 
 
 def main():
@@ -129,7 +131,7 @@ def main():
     ], 16)
 
     now = datetime.now(timezone.utc)
-    us_date = max((m["date"] for m in markets), default=None)
+    us_date = max((m["date"] for m in markets if m["kind"] == "index"), default=None)
     payload = {
         "generated": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "kst_date": now.astimezone(KST).strftime("%Y-%m-%d"),
