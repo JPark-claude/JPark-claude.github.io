@@ -127,8 +127,7 @@ def main():
         ("en", "artificial intelligence OR OpenAI OR Anthropic OR Nvidia when:1d"),
         ("en", "semiconductor OR chipmaker OR data center AI when:1d"),
         ("en", "Big Tech AI Microsoft OR Google OR Meta OR Amazon OR Apple when:1d"),
-        ("ko", "AI 반도체 when:1d"),
-    ], 16)
+    ], 16, ko_max=0)
 
     now = datetime.now(timezone.utc)
     us_date = max((m["date"] for m in markets if m["kind"] == "index"), default=None)

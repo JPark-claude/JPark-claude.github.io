@@ -186,14 +186,19 @@ td:first-child{font-family:var(--font-mono);font-weight:600}
 .codes div{display:flex;gap:10px;align-items:baseline;font-size:13px}
 .codes b{font-family:var(--font-mono);background:var(--accent-soft);color:var(--accent);border-radius:4px;padding:0 6px;min-width:24px;text-align:center}
 .note{font-size:12.5px;color:var(--muted);margin:0}
-.brief-ai{display:flex;flex-direction:column;gap:10px}
-.brief-ai:empty{display:none}
-.brief-ai .bh{font-size:17px;font-weight:700;line-height:1.45;text-wrap:balance}
-.brief-ai .bsec{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
-.brief-ai h3{margin-bottom:4px}
-.brief-ai ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font-size:14px;line-height:1.55}
-.brief-ai .src{font-size:12px;margin-left:4px}
-.brief-ai .bmeta{font-size:12px;color:var(--muted)}
+.brief-main{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,1fr);gap:24px;align-items:start}
+@media (max-width:960px){.brief-main{grid-template-columns:1fr}}
+.brief-side{display:flex;flex-direction:column;gap:16px}
+.art{display:flex;flex-direction:column;gap:10px;max-width:72ch}
+.art .at{font-size:19px;font-weight:700;line-height:1.4;text-wrap:balance;margin:0}
+.art p{margin:0;font-size:15px;line-height:1.8}
+.art .ah{font-size:13px;font-weight:700;margin-top:6px}
+.art ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:14px;line-height:1.6}
+.art .srcs{list-style:none;padding:0;font-size:12.5px;display:flex;flex-direction:column;gap:3px}
+.art .srcs a{color:var(--accent)}
+.art .srcs .nsrc{margin-right:6px}
+.art .bmeta{font-size:12px;color:var(--muted)}
+.art .wait{font-size:14px;color:var(--muted);line-height:1.7;padding:6px 0}
 .brief-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px}
 @media (max-width:960px){.brief-grid{grid-template-columns:1fr}}
 .brief-col{display:flex;flex-direction:column;gap:6px;min-width:0}
@@ -325,29 +330,35 @@ footer{font-size:12px;color:var(--muted)}
       </div>
     </div>
 
-    <section class="panel" id="briefing" aria-label="모닝 브리핑">
+    <section class="panel" id="briefing" aria-label="증시 모닝 브리핑">
       <div class="panel-head">
-        <h2>모닝 브리핑</h2>
+        <h2>증시 모닝 브리핑</h2>
         <span class="muted small" id="brief-when">매일 오전 8시 (화~토) · 미국장 마감 기준</span>
       </div>
-      <div id="brief-ai" class="brief-ai"></div>
-      <div class="brief-grid">
-        <div class="brief-col">
-          <h3 id="brief-mkt-title">미국장 마감</h3>
-          <div class="tbl-wrap"><table class="brief-tbl" id="brief-mkts"></table></div>
-        </div>
-        <div class="brief-col">
-          <h3>관심 종목 등락</h3>
-          <div class="movers">
-            <div><span class="mv-h up">많이 오른 종목</span><ol class="mv" id="brief-up"></ol></div>
-            <div><span class="mv-h down">많이 내린 종목</span><ol class="mv" id="brief-down"></ol></div>
+      <div class="brief-main">
+        <article class="art" id="art-market"></article>
+        <div class="brief-side">
+          <div class="brief-col">
+            <h3 id="brief-mkt-title">미국장 마감</h3>
+            <div class="tbl-wrap"><table class="brief-tbl" id="brief-mkts"></table></div>
+          </div>
+          <div class="brief-col">
+            <h3>관심 종목 등락</h3>
+            <div class="movers">
+              <div><span class="mv-h up">많이 오른 종목</span><ol class="mv" id="brief-up"></ol></div>
+              <div><span class="mv-h down">많이 내린 종목</span><ol class="mv" id="brief-down"></ol></div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="grid2">
-        <div class="brief-col"><h3>증시 헤드라인</h3><ol class="hl" id="brief-mnews"></ol></div>
-        <div class="brief-col"><h3>AI·테크 헤드라인</h3><ol class="hl" id="brief-anews"></ol></div>
+    </section>
+
+    <section class="panel" id="tech-brief" aria-label="미국 테크 뉴스">
+      <div class="panel-head">
+        <h2>미국 테크 뉴스</h2>
+        <span class="muted small" id="tech-when">빅테크 · AI · 반도체 · 매일 오전 8시</span>
       </div>
+      <article class="art" id="art-tech"></article>
     </section>
 
     <section class="panel" id="sentiment" aria-label="종합 심리지수">
@@ -1120,24 +1131,49 @@ footer{font-size:12px;color:var(--muted)}
     if (m.kind === "crypto") return ["$" + num(m.close, 0), signed(m.pct, 2, "%"), m.pct];
     return [num(m.close, 2), signed(m.pct, 2, "%"), m.pct];
   }
-  function headlineList(id, items){
-    var ol = document.getElementById(id); ol.textContent = "";
-    if (!items || !items.length){ ol.appendChild(el("li", {"class":"nempty"}, "헤드라인이 아직 없어요.")); return; }
-    items.slice(0, 8).forEach(function(x){
-      if (!/^https?:\/\//.test(x.url)) return;
-      var li = el("li"); li.appendChild(ext(x.url, x.title));
-      var meta = el("div", {"class":"nmeta"});
-      meta.appendChild(el("span", {"class":"nsrc" + (x.trusted ? " tr" : "")}, x.source || ""));
-      if (x.time) meta.appendChild(el("span", null, kstStamp(x.time)));
-      li.appendChild(meta); ol.appendChild(li);
-    });
+  function paras(box, arr){
+    (arr || []).forEach(function(t){ if (typeof t === "string" && t.trim()) box.appendChild(el("p", null, t.trim())); });
+  }
+  function waitMsg(box, msg){ box.appendChild(el("div", {"class":"wait"}, msg)); }
+  function renderArticles(b, ai){
+    var am = document.getElementById("art-market"), at = document.getElementById("art-tech");
+    am.textContent = ""; at.textContent = "";
+    var today = b ? b.kst_date : null;
+    var fresh = ai && ai.date && (!today || ai.date >= today);
+    var mk = ai && ai.market && !Array.isArray(ai.market) ? ai.market : null;
+    var tc = ai && ai.tech ? ai.tech : null;
+    if (mk && (mk.body || []).length){
+      if (mk.title) am.appendChild(el("h3", {"class":"at"}, mk.title));
+      paras(am, mk.body);
+      if (mk.watch && mk.watch.length){
+        am.appendChild(el("div", {"class":"ah"}, "오늘 볼 일정"));
+        var ul = el("ul"); mk.watch.forEach(function(w){ ul.appendChild(el("li", null, w)); }); am.appendChild(ul);
+      }
+      if (!fresh) am.appendChild(el("div", {"class":"bmeta"}, "지난 브리핑이에요. 새 글은 다음 평일 오전 8시 전에 올라와요."));
+    } else waitMsg(am, "증시 브리핑 글은 화~토 오전 8시 전에 올라와요. 오른쪽 숫자는 미국장 마감 직후 자동으로 모은 거예요.");
+    if (tc && (tc.body || []).length){
+      if (tc.title) at.appendChild(el("h3", {"class":"at"}, tc.title));
+      paras(at, tc.body);
+      var srcs = (tc.sources || []).filter(function(x){ return x && /^https?:\/\//.test(x.url || ""); });
+      if (srcs.length){
+        at.appendChild(el("div", {"class":"ah"}, "출처"));
+        var ol = el("ul", {"class":"srcs"});
+        srcs.forEach(function(x){ var li = el("li"); li.appendChild(el("span", {"class":"nsrc"}, x.source || "")); li.appendChild(ext(x.url, x.title || x.url)); ol.appendChild(li); });
+        at.appendChild(ol);
+      }
+      if (!fresh) at.appendChild(el("div", {"class":"bmeta"}, "지난 글이에요. 새 글은 다음 평일 오전 8시 전에 올라와요."));
+    } else waitMsg(at, "미국 테크 뉴스 글은 화~토 오전 8시 전에 올라와요.");
+    if (ai && ai.written){
+      var w = zoned("Asia/Seoul", new Date(ai.written));
+      document.getElementById("tech-when").textContent = "빅테크 · AI · 반도체 · " + w.mo + "/" + w.d + " " + pad(w.h) + ":" + pad(w.mi) + " 작성";
+      [am, at].forEach(function(box){ if (box.querySelector("p")) box.appendChild(el("div", {"class":"bmeta"}, "Claude가 공신력 있는 매체 보도를 바탕으로 정리한 글이에요. 투자 판단 전에 원문을 확인하세요.")); });
+    }
   }
   function renderBriefing(b, ai){
     var when = document.getElementById("brief-when");
+    renderArticles(b, ai);
     if (!b){
       when.textContent = "매일 오전 8시 (화~토) · 첫 브리핑은 다음 평일 아침에 올라와요";
-      ["brief-mkts","brief-up","brief-down","brief-mnews","brief-anews"].forEach(function(id){ document.getElementById(id).textContent = ""; });
-      document.getElementById("brief-mnews").appendChild(el("li", {"class":"nempty"}, "아직 브리핑 자료가 없어요."));
       return;
     }
     var g = zoned("Asia/Seoul", new Date(b.generated));
@@ -1167,36 +1203,6 @@ footer{font-size:12px;color:var(--muted)}
     }
     moverList("brief-up", mv.filter(function(m){ return m.pct > 0; }).slice(0, 5));
     moverList("brief-down", mv.filter(function(m){ return m.pct < 0; }).reverse().slice(0, 5));
-    headlineList("brief-mnews", b.market_news);
-    headlineList("brief-anews", b.ai_news);
-
-    var box = document.getElementById("brief-ai"); box.textContent = "";
-    if (ai && ai.date && ai.date >= b.kst_date){
-      if (ai.headline) box.appendChild(el("div", {"class":"bh"}, ai.headline));
-      var sec = el("div", {"class":"bsec"});
-      function block(title, arr){
-        if (!arr || !arr.length) return;
-        var d = el("div"); d.appendChild(el("h3", null, title));
-        var ul = el("ul");
-        arr.forEach(function(x){
-          var li = el("li");
-          if (typeof x === "string") li.textContent = x;
-          else {
-            li.appendChild(document.createTextNode(x.text || ""));
-            if (x.url && /^https?:\/\//.test(x.url)) li.appendChild(ext(x.url, x.source || "출처", "src"));
-          }
-          ul.appendChild(li);
-        });
-        d.appendChild(ul); sec.appendChild(d);
-      }
-      block("증시", ai.market);
-      block("AI·테크", ai.ai_tech);
-      block("오늘 볼 것", ai.watch);
-      box.appendChild(sec);
-      box.appendChild(el("div", {"class":"bmeta"}, "Claude가 위 자료와 웹 검색을 바탕으로 정리한 요약이에요. 투자 판단의 근거로 쓰기 전에 원문을 확인하세요."));
-    } else {
-      box.appendChild(el("div", {"class":"bmeta"}, "Claude 요약은 매일 오전 8시 전후로 올라와요. 지금은 자동 수집한 숫자와 헤드라인만 보여드려요."));
-    }
   }
   function loadBriefing(){
     var opt = {cache:"no-store"}, ts = "?ts=" + Math.floor(Date.now() / 300000);
