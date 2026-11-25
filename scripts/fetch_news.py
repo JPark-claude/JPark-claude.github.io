@@ -139,6 +139,48 @@ def collect(tk):
     return merged, errors
 
 
+TECH_FEEDS = [
+    ("rss", "https://techcrunch.com/feed/", "TechCrunch"),
+    ("rss", "https://feeds.arstechnica.com/arstechnica/technology-lab", "Ars Technica"),
+    ("rss", "https://www.cnbc.com/id/19854910/device/rss/rss.html", "CNBC"),
+    ("rss", "https://www.wired.com/feed/category/business/latest/rss", "Wired"),
+    ("gnews", '"artificial intelligence" OR OpenAI OR Anthropic OR "AI model" when:2d', None),
+    ("gnews", "Nvidia OR AMD OR Broadcom OR Marvell OR Intel chip when:2d", None),
+    ("gnews", "Apple OR Microsoft OR Google OR Amazon OR Meta OR Tesla tech when:2d", None),
+    ("gnews", "data center OR hyperscaler OR cloud capex when:2d", None),
+    ("gnews", "export controls chips OR FTC OR antitrust Big Tech when:2d", None),
+]
+KOREA_WORDS = ("Korea", "Korean", "Samsung", "SK Hynix", "SK hynix", "Seoul", "LG ", "Naver", "Kakao", "Hyundai")
+
+
+def collect_tech():
+    """해외(미국 중심) 테크 뉴스. 한국 관련 기사는 뺀다."""
+    items = []
+    for kind, src, name in TECH_FEEDS:
+        try:
+            if kind == "rss":
+                items += parse_rss(get(src), name, name)
+            else:
+                items += parse_rss(get(gnews(src, "en")), "Google News", strip_source_suffix=True)
+        except Exception as ex:
+            print("tech feed error", (name or src)[:40], type(ex).__name__, file=sys.stderr)
+        time.sleep(0.4)
+    cutoff = datetime.now(timezone.utc) - timedelta(days=3)
+    seen, out = set(), []
+    for x in sorted(items, key=lambda i: i["time"] or "", reverse=True):
+        if any(w in x["title"] for w in KOREA_WORDS):
+            continue
+        key = re.sub(r"[^0-9a-z]", "", x["title"].lower())[:70]
+        if not key or key in seen:
+            continue
+        if x["time"] and datetime.fromisoformat(x["time"].replace("Z", "+00:00")) < cutoff:
+            continue
+        seen.add(key)
+        x["lang"] = "en"
+        out.append(x)
+    return out[:80]
+
+
 def main():
     tickers = json.loads((ROOT / "tickers.json").read_text(encoding="utf-8"))
     out_path = ROOT / "news.json"
@@ -156,7 +198,9 @@ def main():
         else:
             result[tk["t"]] = {"name": tk.get("ko"), "items": items}
         print(tk["t"], len(items), "items", ("errors: " + " | ".join(errors)) if errors else "", file=sys.stderr)
-    payload = {"updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), "tickers": result}
+    tech = collect_tech()
+    print("tech", len(tech), "items", file=sys.stderr)
+    payload = {"updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), "tickers": result, "topics": {"tech": {"items": tech}}}
     out_path.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
 
