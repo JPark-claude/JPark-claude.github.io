@@ -1,52 +1,58 @@
 {
-  "date": "2026-11-26",
-  "written": "2026-11-25T22:47:27Z",
+  "date": "2026-11-27",
+  "written": "2026-11-26T22:47:13Z",
   "market": {
-    "title": "다우, 장중 1,100포인트 급락 딛고 반등…AI주 매도는 이어져",
+    "title": "추수감사절 휴장 속 선물 반등…블랙프라이데이 단축장 앞두고 'AI 저가 매수' 시험대",
     "body": [
-      "추수감사절 연휴를 앞둔 25일(현지시간) 뉴욕증시는 극심한 변동성 속에 혼조로 마감했다. 다우지수는 장중 1,100포인트 넘게 밀렸다가 막판 매수세가 몰리며 0.33% 오른 50,183에 거래를 마쳤다. 반면 S&P500은 0.25% 내린 7,183 안팎, 나스닥은 0.62% 하락한 23,586으로 장을 끝냈다. 기술주 매도세가 사흘째 시장을 짓누른 가운데, 오후 들어 에너지 등 일부 업종으로 자금이 이동하면서 낙폭을 상당 부분 되돌린 것으로 풀이된다. 거래량은 평소보다 크게 많았다.",
-      "하락의 중심은 이번에도 반도체와 AI 관련주였다. 전날 필라델피아 반도체지수가 7.88% 폭락한 데 이어 엔비디아는 이날도 3.91% 내린 149.30달러에 마감했고, 거래량은 3개월 평균의 두 배 수준에 달했다. AMD도 1.75% 밀렸다. AI 인프라 투자 대비 수익성에 대한 의구심과 높은 밸류에이션 부담, 수출 통제 리스크가 겹치며 투자자들이 AI 노출을 줄이는 흐름이 이어졌다는 분석이 나온다. 대형 기술주 안에서도 종목별로 방향이 엇갈렸다.",
-      "매크로 측면에서는 인플레이션 지표가 부담으로 작용했다. 10월 개인소비지출(PCE) 물가는 연율 3.8%로 예상에 부합했지만 연준 목표치의 두 배에 가깝고, 근원 PCE는 석 달 연속 전월 대비 0.3% 올랐다. 이에 추가 금리 인상 가능성이 다시 거론되며 기술주 매도를 부추긴 것으로 보인다. 다만 미 10년물 국채금리는 4.91% 수준으로 소폭 내렸다. 달러인덱스는 0.24% 오른 104.06, WTI는 1.8% 하락한 배럴당 80.57달러를 기록했다. 새 관세 제안 소식도 시장 불안을 키운 요인으로 꼽힌다.",
-      "개별 실적에서는 HP가 예상을 웃돈 분기 실적과 2027 회계연도 전망에 힘입어 11% 넘게 뛰었고, 매출 가이던스가 기대에 못 미친 앰바렐라와 뉴타닉스는 각각 19%, 15%대 급락했다."
+      "뉴욕증시는 26일(현지시간) 추수감사절을 맞아 휴장했다. 직전 거래일인 25일 S&P500은 장중 3% 넘게 밀렸다가 낙폭을 대부분 만회해 0.25% 내린 7,182.78에 마감했고, 나스닥은 0.62% 하락한 23,585.80, 다우는 0.33% 오른 50,182.95로 장을 마쳤다. 휴장일에도 거래된 지수선물은 오름세를 보였다. MarketWatch에 따르면 S&P500 선물은 0.5% 안팎 올라 28일 단축 거래에서의 반등을 예고했다. 새로 발표된 관세안이 우려했던 것보다는 덜 공격적이라는 평가와, 전날 장 막판의 강한 저가 매수세가 투자심리를 지탱한 것으로 풀이된다.",
+      "관심은 여전히 반도체와 AI 관련주에 쏠려 있다. 필라델피아 반도체지수는 25일 0.65% 내려 8,774.86으로 마감해, 아직 뚜렷한 반등 신호는 나오지 않았다. 다만 아시아에서는 '두들겨 맞은 AI 종목'을 사들이는 흐름이 나타나 닛케이와 항셍지수가 올랐고, 유럽 증시도 26일 강세를 보였다. 엔비디아의 지배구조 문제에 대한 신용평가사의 경계, AI 인프라 투자 회수 가능성에 대한 의구심이 남아 있어 단축장에서도 변동성이 클 수 있다는 분석이 나온다.",
+      "매크로 변수는 엇갈렸다. 미 10년물 국채금리는 25일 4.848%로 0.056%p 내렸지만, 시장에서는 끈질긴 물가 탓에 연준이 추가 금리 인상에 나설 수 있다는 관측이 이어지고 있다. 휴장 중 WTI는 1.47% 오른 배럴당 84.91달러, 금은 1.63% 오른 온스당 3,593달러 선에서 거래됐다. 달러인덱스는 103.79로 소폭 올랐고, VIX는 26.8로 내려와 불안 심리가 다소 진정된 것으로 보인다.",
+      "28일 미국 증시는 현지시간 오후 1시에 조기 폐장한다. 거래량이 얇은 단축장인 만큼 지수 움직임이 과장될 수 있고, 블랙프라이데이 온라인 매출 집계가 소비 경기를 가늠할 단서로 주목받을 전망이다."
     ],
     "watch": [
-      "종일 미국 증시 추수감사절 휴장",
-      "28일(토) 03:00 미국 증시 블랙프라이데이 조기 폐장(현지 13:00)"
+      "23:30 미국 증시 개장(블랙프라이데이 단축 거래)",
+      "28일(토) 03:00 미국 증시 조기 폐장(채권시장 04:00 조기 마감)",
+      "블랙프라이데이 온라인 매출 집계(어도비 등)"
     ]
   },
   "tech": {
-    "title": "엔비디아 둘러싼 규제·지배구조 논란 속 스페이스X '우주 데이터센터' 승인",
+    "title": "엔비디아 수출 통제 파장 동남아로 확산…AI 데이터센터는 자금·입지 모두 '역풍'",
     "body": [
-      "엔비디아를 둘러싼 불확실성이 기술 업계의 최대 화두로 이어지고 있다. 최근 CEO로 복귀한 젠슨 황이 회사 행동강령을 어겼다는 내부 논란이 TechCrunch 보도로 다시 불거졌고, 중국이 규제를 우회해 엔비디아 AI 칩에 접근해 온 경로에 대한 Reuters의 분석도 나왔다. 미 상무부가 이달 중순 해외 데이터센터·원격 접속을 통한 중국의 AI 칩 이용 경로를 막는 조치를 내놓은 뒤, 기존 칩 재판매 업체들이 새 구매처를 찾아 GPU를 처분하고 있다는 보도도 이어졌다. 수출 통제가 칩 판매 구조 자체를 흔들고 있다는 해석이 나온다.",
-      "우주 인프라에서는 큰 진전이 있었다. CNBC에 따르면 스페이스X가 미 연방통신위원회(FCC)로부터 최대 100만 기에 이르는 궤도 데이터센터 위성 배치를 승인받았다. 올해 초 xAI 합병과 함께 제출한 계획으로, 지상 전력·부지 제약을 우회해 AI 연산 능력을 우주로 확장하려는 구상이 규제 관문을 넘은 셈이다. 다만 실제 구축 속도와 경제성은 아직 검증되지 않았다.",
-      "AI 서비스 경쟁도 계속됐다. OpenAI는 ChatGPT의 일반 대화 기능과 업무용 기능(Work)을 하나로 합치면서, 사용량이 많은 이용자는 이전보다 빨리 사용 한도에 도달할 수 있다고 밝혔다. 연산 비용 부담이 서비스 설계에 직접 반영되기 시작했다는 신호로 풀이된다. 최근 상장한 Anthropic의 다리오 아모데이 CEO는 AI에 인간의 통제권을 넘기고 있다는 비판을 '터무니없다'고 반박했다.",
-      "유럽에서는 테슬라의 자율주행 기술 승인 논의가 연기됐다. CNBC는 EU가 테슬라 FSD 승인 안건 논의를 미뤘다고 전했다. 미국에서 확장 중인 자율주행 서비스의 유럽 진출 일정이 늦어질 수 있다는 관측이 나온다."
+      "미국의 AI 칩 수출 통제 여파가 엔비디아의 판매망 전반으로 번지고 있다. TechCrunch는 엔비디아가 동남아시아 지역으로의 칩 출하를 일시 중단했다고 보도했다. 이 지역은 그동안 중국 기업들이 해외 데이터센터를 통해 첨단 GPU에 접근하는 우회로로 지목돼 왔다. 여기에 CBS는 중국계 자본이 소유한 미국 내 기업들이 엔비디아의 최첨단 AI 칩을 사들여 왔다는 탐사보도를 내놨다. 원격 접속 규제 이후 중국 암시장에서 B300 가격이 크게 뛰었다는 보도까지 이어지며, 규제의 '구멍'을 메우는 과정이 엔비디아의 해외 매출 구조를 흔들 수 있다는 해석이 나온다.",
+      "엔비디아는 지배구조 측면에서도 부담을 안고 있다. 니케이아시아에 따르면 S&P글로벌은 젠슨 황의 CEO 복귀 이틀 만에 엔비디아의 신용등급을 '부정적 관찰 대상'에 올리며 이사회 독립성을 문제 삼았다. 반면 무디스는 황 CEO의 복귀가 단기 불확실성을 줄인다고 평가해, 신평사 간 시각이 엇갈리는 모습이다.",
+      "AI 데이터센터 산업은 자금과 입지 양쪽에서 역풍을 맞고 있다. 블룸버그는 AI 관련 주가 급변동으로 데이터센터 인수·투자 거래가 위축되고 있다고 전했다. 트럼프 대통령은 아마존·구글·마이크로소프트처럼 해외에 데이터센터를 짓는 빅테크에 '엄청난 세금'을 물리겠다고 경고했고, 일본에서는 주거지 인근 데이터센터 건설에 대한 주민 반발이 커지고 있다고 로이터가 보도했다. 그럼에도 일본 전력회사 JERA가 발전소 인근에 Anthropic·메타용 데이터센터 건설을 추진하는 등 전력 확보를 둘러싼 경쟁은 계속되고 있다.",
+      "유럽에서는 메타의 AI 스마트 안경이 법정에 섰다. 네덜란드 시민단체들은 몰래 촬영 등 사생활 침해 우려를 이유로 판매 금지를 요구했고, 메타는 법원에서 제품의 안전장치를 방어했다. 판결에 따라 유럽 내 웨어러블 AI 기기 규제의 선례가 될 수 있다는 관측이 나온다."
     ],
     "sources": [
       {
-        "source": "CNBC",
-        "title": "SpaceX wins FCC approval to deploy 1 million orbital data center satellites",
-        "url": "https://www.cnbc.com/2026/11/25/spacex-fcc-satellite-approval.html"
-      },
-      {
         "source": "TechCrunch",
-        "title": "OpenAI says heavy ChatGPT users may hit limits sooner as it merges Chat and Work",
-        "url": "https://techcrunch.com/2026/11/25/openai-says-heavy-chatgpt-users-may-hit-limits-sooner-as-it-merges-chat-and-work/"
+        "title": "Nvidia hits pause on chip shipments to Southeast Asia",
+        "url": "https://techcrunch.com/2026/11/26/nvidia-hits-pause-on-chip-shipments-to-southeast-asia/"
       },
       {
-        "source": "TechCrunch",
-        "title": "Jensen Huang broke Nvidia's code of conduct, and his employees may not forget it",
-        "url": "https://techcrunch.com/2026/11/25/jensen-huang-broke-nvidias-code-of-conduct-and-his-employees-may-not-forget-it/"
+        "source": "Nikkei Asia",
+        "title": "Nvidia's shares drop, credit rating on watch two days after Huang's return",
+        "url": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxNUlY1dHczNWpBM21GTUVVcWZ1QUdrZG5acThyMTJzTm14bTNDemdndjNSVDNZV1JnbDYyYnhZQWw3SlQySlpYT1lERUdrWDNQUHp0RnZOZ3h3cjZXVVhjRXRlUng2ZmJiRlBKb3p1enlaMUM3cndSODJ4WVZadWZVYlg4b0FSa3dPc2NoV0puaEZVV1Z6YlNCM3MzUWZrdzRjdG44bGotQUFIUFBDUnp2VUlNNDZIZUt2RkExZkp6Zmx2d1FpdnpIM1BBOC1TbFlzX21wSnNwdjY?oc=5"
       },
       {
-        "source": "TechCrunch",
-        "title": "Anthropic's Dario Amodei calls accusations of surrendering human control to AI 'absurd'",
-        "url": "https://techcrunch.com/2026/11/25/anthropics-dario-amodei-calls-accusations-of-surrendering-human-control-to-ai-absurd/"
+        "source": "Bloomberg",
+        "title": "Data Center Dealmaking Hit by Rising AI Turmoil",
+        "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxPN3hTMVNHM2dualh4VzlyNXFCV2ZJS0lsSkNUTWFHdERmUWdSbGk2RW50b1lGTnRjV0RvREw5bFZxelFjOGtYVG9XajZRUUFDd1Z5bHR2UWtDRXBCNjl4Q1VDckpqRG8xMmFfejN5aGl1cTVXV0hTRUgxTFQxWnFVZzBWRTA1bkU3MURtQzVfd0tIOWdOYm9ZVk9jcVE0VXRjSVFj?oc=5"
       },
       {
-        "source": "Al Jazeera",
-        "title": "US moves to block China's remote access to AI chips amid Nvidia scandal",
-        "url": "https://aljazeera.com/economy/2026/11/17/us-moves-to-block-chinas-remote-access-to-ai-chips-amid-nvidia-scandal"
+        "source": "Reuters",
+        "title": "The data center next door: Japanese push back on AI boom",
+        "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE1aczVvTUZnQzFhNnRSRGlkUWxjM21scHotVUkyRlpibXFlQ0FGOEswYndtaW1QQXZraldxczRndDJJMHJkTzBscHliZnUtX3FIWWxWNEE0ZEFsR0VrNjdwSXVyc0ROb0k?oc=5"
+      },
+      {
+        "source": "Nikkei Asia",
+        "title": "Japan's JERA aims to build Anthropic, Meta data centers near power plants",
+        "url": "https://news.google.com/rss/articles/CBMi1wFBVV95cUxPN0FKWlltSXhpMTdpTnRja2JXb3VyWlBnVG9ITFA3YnRiN0lYMzYwNE1vMmF0WEZzLTJyM09jMnVoZks4alExa09oUTA5ZnZLYzl4UllpZjBiWHFuazQ4WkFhUGw1SC1nRGNRQUpoZ25sUFMzQ25EckVCSWZCdWJMVmhfR0s0dlBxSUZwYjdyVUUzN1ppbzBDLWw2eEszQUE0NWNKZ0hicF9oVzlmaXFVXzNtR1FVdlBmalNIOU4xZDRLUXp5bFQ0MnZYdWFwR3lRWWF1LUhDTQ?oc=5"
+      },
+      {
+        "source": "NL Times",
+        "title": "Meta defends AI glasses in court as Dutch groups demand ban",
+        "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxPUndsZU1XY3hRUnNKMlRnaWZXY1c5WmVKdGlrZUhGR1N5c0ZoSG0zSDVTa1FVdjV0amp3dVc3c2hMVVFVNnZVMkZCOTJkTmhyczVBSFI2M1lndDJkdHdDRXV5VjVBSjZDRHRQM0xfNEt4SVpRQmoxckNiRDh0NDBMTjhwTzhVMEE1bWdr?oc=5"
       }
     ]
   }
