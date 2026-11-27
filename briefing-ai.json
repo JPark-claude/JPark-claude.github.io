@@ -1,58 +1,52 @@
 {
-  "date": "2026-11-27",
-  "written": "2026-11-26T22:47:13Z",
+  "date": "2026-11-28",
+  "written": "2026-11-27T22:43:26Z",
   "market": {
-    "title": "추수감사절 휴장 속 선물 반등…블랙프라이데이 단축장 앞두고 'AI 저가 매수' 시험대",
+    "title": "AI주 저가매수에 뉴욕증시 반등…반도체지수 4.7% 급등, 주간 상승으로 마감",
     "body": [
-      "뉴욕증시는 26일(현지시간) 추수감사절을 맞아 휴장했다. 직전 거래일인 25일 S&P500은 장중 3% 넘게 밀렸다가 낙폭을 대부분 만회해 0.25% 내린 7,182.78에 마감했고, 나스닥은 0.62% 하락한 23,585.80, 다우는 0.33% 오른 50,182.95로 장을 마쳤다. 휴장일에도 거래된 지수선물은 오름세를 보였다. MarketWatch에 따르면 S&P500 선물은 0.5% 안팎 올라 28일 단축 거래에서의 반등을 예고했다. 새로 발표된 관세안이 우려했던 것보다는 덜 공격적이라는 평가와, 전날 장 막판의 강한 저가 매수세가 투자심리를 지탱한 것으로 풀이된다.",
-      "관심은 여전히 반도체와 AI 관련주에 쏠려 있다. 필라델피아 반도체지수는 25일 0.65% 내려 8,774.86으로 마감해, 아직 뚜렷한 반등 신호는 나오지 않았다. 다만 아시아에서는 '두들겨 맞은 AI 종목'을 사들이는 흐름이 나타나 닛케이와 항셍지수가 올랐고, 유럽 증시도 26일 강세를 보였다. 엔비디아의 지배구조 문제에 대한 신용평가사의 경계, AI 인프라 투자 회수 가능성에 대한 의구심이 남아 있어 단축장에서도 변동성이 클 수 있다는 분석이 나온다.",
-      "매크로 변수는 엇갈렸다. 미 10년물 국채금리는 25일 4.848%로 0.056%p 내렸지만, 시장에서는 끈질긴 물가 탓에 연준이 추가 금리 인상에 나설 수 있다는 관측이 이어지고 있다. 휴장 중 WTI는 1.47% 오른 배럴당 84.91달러, 금은 1.63% 오른 온스당 3,593달러 선에서 거래됐다. 달러인덱스는 103.79로 소폭 올랐고, VIX는 26.8로 내려와 불안 심리가 다소 진정된 것으로 보인다.",
-      "28일 미국 증시는 현지시간 오후 1시에 조기 폐장한다. 거래량이 얇은 단축장인 만큼 지수 움직임이 과장될 수 있고, 블랙프라이데이 온라인 매출 집계가 소비 경기를 가늠할 단서로 주목받을 전망이다."
+      "추수감사절 다음 날 오후 1시(현지시간)에 조기 폐장한 27일 뉴욕증시는 3대 지수가 일제히 올랐다. S&P500은 1.6% 오른 7,297.49, 나스닥은 2.31% 뛴 24,129.50, 다우는 1.18% 상승한 50,774.94로 마감했고 러셀2000도 1.71% 올랐다. 연휴 직전 이틀 연속 밀렸던 AI 관련주에 저가매수세가 몰린 것이 상승을 이끈 것으로 풀이된다. 주요 지수는 이번 주 각각 4% 안팎 오르며 2025년 4월 이후 최악이었던 직전 주의 낙폭을 일부 되돌렸다. 변동성지수(VIX)는 11.16% 내린 23.81로 불안 심리가 다소 누그러졌지만, AI 투자 지속성에 대한 의구심은 여전하다는 분석이 나온다.",
+      "업종별로는 반도체가 단연 강했다. 필라델피아 반도체지수는 4.69% 급등했다. 마이크론·마벨이 장중 6% 안팎 오르는 등 메모리·네트워크 반도체가 반등을 주도했고, 샌디스크·웨스턴디지털 같은 저장장치주와 코히런트·루멘텀 등 광통신주도 동반 강세를 보였다. 반면 엔비디아는 장 초반 약세를 보이며 상대적으로 소외됐는데, 동남아 서버 출하 중단 보도 등 수출 통제 관련 악재가 부담으로 작용한 것으로 보인다. 지난주 사상 최대 규모로 상장한 앤트로픽은 공모가를 밑돌던 흐름에서 벗어나 장중 8% 가까이 반등했다.",
+      "매크로 변수는 엇갈렸다. 미 10년물 국채금리는 0.088%p 오른 4.936%로 5%에 바짝 다가섰고, 달러인덱스도 0.33% 오른 104.01을 기록했다. 금리 상승에도 증시가 오른 것은 그만큼 기술주 낙폭 과대 인식이 컸기 때문이라는 해석이 나온다. WTI 유가는 0.72% 내린 배럴당 83.08달러, 금 선물은 14개월 만의 저점에서 반등해 3.75% 오른 3,668.5달러를 기록했다. 비트코인은 1.4% 내린 5만9,648달러로 6만 달러선 아래에 머물렀다."
     ],
     "watch": [
-      "23:30 미국 증시 개장(블랙프라이데이 단축 거래)",
-      "28일(토) 03:00 미국 증시 조기 폐장(채권시장 04:00 조기 마감)",
-      "블랙프라이데이 온라인 매출 집계(어도비 등)"
+      "주말 미국 증시 휴장",
+      "12/2(수) 00:00 미국 11월 ISM 제조업지수",
+      "12/4(금) 22:30 미국 11월 고용보고서(예정)"
     ]
   },
   "tech": {
-    "title": "엔비디아 수출 통제 파장 동남아로 확산…AI 데이터센터는 자금·입지 모두 '역풍'",
+    "title": "엔비디아, 새 미국 수출 규제에 동남아 4개국 서버 출하 중단",
     "body": [
-      "미국의 AI 칩 수출 통제 여파가 엔비디아의 판매망 전반으로 번지고 있다. TechCrunch는 엔비디아가 동남아시아 지역으로의 칩 출하를 일시 중단했다고 보도했다. 이 지역은 그동안 중국 기업들이 해외 데이터센터를 통해 첨단 GPU에 접근하는 우회로로 지목돼 왔다. 여기에 CBS는 중국계 자본이 소유한 미국 내 기업들이 엔비디아의 최첨단 AI 칩을 사들여 왔다는 탐사보도를 내놨다. 원격 접속 규제 이후 중국 암시장에서 B300 가격이 크게 뛰었다는 보도까지 이어지며, 규제의 '구멍'을 메우는 과정이 엔비디아의 해외 매출 구조를 흔들 수 있다는 해석이 나온다.",
-      "엔비디아는 지배구조 측면에서도 부담을 안고 있다. 니케이아시아에 따르면 S&P글로벌은 젠슨 황의 CEO 복귀 이틀 만에 엔비디아의 신용등급을 '부정적 관찰 대상'에 올리며 이사회 독립성을 문제 삼았다. 반면 무디스는 황 CEO의 복귀가 단기 불확실성을 줄인다고 평가해, 신평사 간 시각이 엇갈리는 모습이다.",
-      "AI 데이터센터 산업은 자금과 입지 양쪽에서 역풍을 맞고 있다. 블룸버그는 AI 관련 주가 급변동으로 데이터센터 인수·투자 거래가 위축되고 있다고 전했다. 트럼프 대통령은 아마존·구글·마이크로소프트처럼 해외에 데이터센터를 짓는 빅테크에 '엄청난 세금'을 물리겠다고 경고했고, 일본에서는 주거지 인근 데이터센터 건설에 대한 주민 반발이 커지고 있다고 로이터가 보도했다. 그럼에도 일본 전력회사 JERA가 발전소 인근에 Anthropic·메타용 데이터센터 건설을 추진하는 등 전력 확보를 둘러싼 경쟁은 계속되고 있다.",
-      "유럽에서는 메타의 AI 스마트 안경이 법정에 섰다. 네덜란드 시민단체들은 몰래 촬영 등 사생활 침해 우려를 이유로 판매 금지를 요구했고, 메타는 법원에서 제품의 안전장치를 방어했다. 판결에 따라 유럽 내 웨어러블 AI 기기 규제의 선례가 될 수 있다는 관측이 나온다."
+      "엔비디아가 말레이시아·싱가포르·태국·인도네시아 등 동남아 4개국으로 가는 AI 서버 출하를 멈춘 것으로 전해졌다. 파이낸셜타임스와 세마포 보도에 따르면 엔비디아는 델·슈퍼마이크로 등 서버 제조 협력사에 해당 국가 고객으로의 출하를 중단하라고 통보했다. 미 상무부가 지난 19일 관보에 게재한 새 규정은 이들 4개국과 브라질로 첨단 AI 칩을 보낼 때 허가를 받도록 했다. 이들 지역은 중국 하이퍼스케일러가 합법적으로 엔비디아 칩 연산력에 접근하는 통로 역할을 해 왔다는 점에서, 이번 조치는 중국의 우회 접근을 차단하려는 성격으로 풀이된다. 출하 중단이 규정 준수 절차가 정리될 때까지의 일시적 조치인지는 아직 불분명하다.",
+      "수출 통제를 둘러싼 압박은 엔비디아 지배구조 문제와도 맞물려 있다. 엔비디아 이사회는 최근 스캔들로 물러났던 젠슨 황을 CEO로 복귀시키는 한편, 독립적인 '국가안보·수출통제위원회'를 신설한 것으로 알려졌다. 여기에 블룸버그는 중국 내 한 시설에서 반입이 금지된 블랙웰 칩이 발견됐으며 이 시설이 앨리스 황과 연관돼 있다고 보도했다. 규제 당국의 감시가 한층 강화될 수 있다는 관측이 나온다.",
+      "반사이익을 노리는 움직임도 있다. 블룸버그는 인도가 새 미국 칩 규제를 계기로 'AI 피난처'로 부상하며 투자 유치를 노리고 있다고 전했다. 동남아 데이터센터에 쏠렸던 수요가 미국 우방국 쪽으로 재편될 가능성이 거론된다.",
+      "AI 서비스의 사회적 수용성 논란도 이어졌다. AP통신에 따르면 미국 최대 교육구 중 하나인 로스앤젤레스 통합교육구는 구글의 AI 기능을 차단하고 구글 제품 사용 중단까지 검토하고 있다. 교육 현장에서 생성형 AI 도입을 둘러싼 견제가 빅테크의 교육 시장 전략에 변수가 될 수 있다는 평가다."
     ],
     "sources": [
       {
-        "source": "TechCrunch",
-        "title": "Nvidia hits pause on chip shipments to Southeast Asia",
-        "url": "https://techcrunch.com/2026/11/26/nvidia-hits-pause-on-chip-shipments-to-southeast-asia/"
+        "source": "Semafor(Yahoo Finance)",
+        "title": "Nvidia halts chip shipments to Southeast Asian countries",
+        "url": "https://finance.yahoo.com/technology/articles/nvidia-halts-chip-shipments-southeast-221523356.html"
       },
       {
-        "source": "Nikkei Asia",
-        "title": "Nvidia's shares drop, credit rating on watch two days after Huang's return",
-        "url": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxNUlY1dHczNWpBM21GTUVVcWZ1QUdrZG5acThyMTJzTm14bTNDemdndjNSVDNZV1JnbDYyYnhZQWw3SlQySlpYT1lERUdrWDNQUHp0RnZOZ3h3cjZXVVhjRXRlUng2ZmJiRlBKb3p1enlaMUM3cndSODJ4WVZadWZVYlg4b0FSa3dPc2NoV0puaEZVV1Z6YlNCM3MzUWZrdzRjdG44bGotQUFIUFBDUnp2VUlNNDZIZUt2RkExZkp6Zmx2d1FpdnpIM1BBOC1TbFlzX21wSnNwdjY?oc=5"
+        "source": "Forbes",
+        "title": "Nvidia Reportedly Halts AI Chip Shipments To Southeast Asia As U.S. Tightens China Curbs",
+        "url": "https://www.forbes.com/sites/siladityaray/2026/11/26/nvidia-reportedly-halts-ai-chip-shipments-to-southeast-asia-as-us-tightens-china-curbs/"
       },
       {
         "source": "Bloomberg",
-        "title": "Data Center Dealmaking Hit by Rising AI Turmoil",
-        "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxPN3hTMVNHM2dualh4VzlyNXFCV2ZJS0lsSkNUTWFHdERmUWdSbGk2RW50b1lGTnRjV0RvREw5bFZxelFjOGtYVG9XajZRUUFDd1Z5bHR2UWtDRXBCNjl4Q1VDckpqRG8xMmFfejN5aGl1cTVXV0hTRUgxTFQxWnFVZzBWRTA1bkU3MURtQzVfd0tIOWdOYm9ZVk9jcVE0VXRjSVFj?oc=5"
+        "title": "Nvidia Blackwell Chips Turn Up at China Site Tied to Alice Huang",
+        "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOajRDYnpkT2kwWEdlR2REeG93cnBZdkdsYmo3dTFmaVp3enZYN3Jid0RYVWZwNXJvcE00OG5FNjdwd0MzQXpFV1gzeUxkdnhxTVNoaGVNRmpnRllMTGY4emNtNW9VYnc4RWZVX0I2WExQNy1Ha21aV0FNWWVUb0FacnFLM01rUWRudjBCdGJpbGxCVUx3dl9KMEtZb0pyYURCTG1iWW5xUmNpaDlnc0lsMVpldmV6QQ?oc=5"
       },
       {
-        "source": "Reuters",
-        "title": "The data center next door: Japanese push back on AI boom",
-        "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE1aczVvTUZnQzFhNnRSRGlkUWxjM21scHotVUkyRlpibXFlQ0FGOEswYndtaW1QQXZraldxczRndDJJMHJkTzBscHliZnUtX3FIWWxWNEE0ZEFsR0VrNjdwSXVyc0ROb0k?oc=5"
+        "source": "Bloomberg",
+        "title": "India Emerges as AI Haven, Seeks Boost From New US Chip Curbs",
+        "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxPUGR5Q0NKeS1ELXBSSWNndVdxTTVWczlpSUplOWxaNEY0ZmNCdFVQMUg1bzlDVEozcVlRY2M0QTl0bFZjREEwNFFFMWlsM1BubzVCREFoa1pDMllpMmpSTUN2RWphelphY0VxT19BR0dSdVJrMEQ1ZXJ5ZXF4UVJsTmdTQXliSklnU3RtTVNBVmF6UlVPbVg4SkxPc21ZMmdJMHNPZi1tUXdlZVBWVHViV2NxeDF5bDRFX2dQUUVyTHAxd2ZSOFFKaw?oc=5"
       },
       {
-        "source": "Nikkei Asia",
-        "title": "Japan's JERA aims to build Anthropic, Meta data centers near power plants",
-        "url": "https://news.google.com/rss/articles/CBMi1wFBVV95cUxPN0FKWlltSXhpMTdpTnRja2JXb3VyWlBnVG9ITFA3YnRiN0lYMzYwNE1vMmF0WEZzLTJyM09jMnVoZks4alExa09oUTA5ZnZLYzl4UllpZjBiWHFuazQ4WkFhUGw1SC1nRGNRQUpoZ25sUFMzQ25EckVCSWZCdWJMVmhfR0s0dlBxSUZwYjdyVUUzN1ppbzBDLWw2eEszQUE0NWNKZ0hicF9oVzlmaXFVXzNtR1FVdlBmalNIOU4xZDRLUXp5bFQ0MnZYdWFwR3lRWWF1LUhDTQ?oc=5"
-      },
-      {
-        "source": "NL Times",
-        "title": "Meta defends AI glasses in court as Dutch groups demand ban",
-        "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxPUndsZU1XY3hRUnNKMlRnaWZXY1c5WmVKdGlrZUhGR1N5c0ZoSG0zSDVTa1FVdjV0amp3dVc3c2hMVVFVNnZVMkZCOTJkTmhyczVBSFI2M1lndDJkdHdDRXV5VjVBSjZDRHRQM0xfNEt4SVpRQmoxckNiRDh0NDBMTjhwTzhVMEE1bWdr?oc=5"
+        "source": "AP News",
+        "title": "Los Angeles schools block Google’s AI features, consider dropping tech giant’s products",
+        "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxPX28yVGlpUUl3UEpZMGJaTDRFbXBWR09uX1diWWotVXFuQ2JOTDlZRVVCUXRtN3FyUUNzczI2SG9sTXZXanlELUZfYU1YTHZ3enQ1NUoyUGU4NmwzNzJYV3l5ZjM0cHF0NHlhMDl2R3gwaWROaHREY3Zrd3BBd2hHd202WnFqWTJwSF9pSThfUk5wRV9TQkdBVC1zc09hbHh6M1BVVHJ5MUdmc2JzQmJ2YUJLaEkzSGJXNHc?oc=5"
       }
     ]
   }
