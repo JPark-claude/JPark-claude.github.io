@@ -75,6 +75,50 @@
     {
      "rank": 4,
      "region": "해외",
+     "broker": "Susquehanna",
+     "title": "마벨 실적 앞두고 목표가 300→225달러 하향, 긍정 의견 유지",
+     "date": "2026-11-23",
+     "category": "테크 기업",
+     "tickers": [
+      "MRVL"
+     ],
+     "summary": "서스퀘하나는 12월 1일 실적 발표를 앞두고 마벨의 목표가를 300달러에서 225달러로 낮추면서 긍정(Positive) 의견은 유지했다. 밸류에이션 배수를 낮췄지만, AI 수요에 힘입어 실적과 가이던스는 기대보다 좋을 것으로 봤다.",
+     "points": [
+      "목표가 300→225달러(Positive 유지)",
+      "하향 이유: 배수 축소, 맞춤형 AI 칩 확대의 시기와 규모를 둘러싼 실행 위험",
+      "실적 컨센서스(TipRanks 집계): 3분기 EPS 1.10달러, 매출 31.5억 달러(+52%)"
+     ],
+     "why": "실적 발표 직전 리포트, 루멘텀 인수 이후 광통신·AI 네트워킹 핵심 종목",
+     "views": null,
+     "url": "https://seekingalpha.com/news/4675740-marvell-target-lowered-at-susquehanna-ahead-of-earnings",
+     "url_label": "보도 기사",
+     "access": "원문 비공개 · 보도 요약"
+    },
+    {
+     "rank": 5,
+     "region": "해외",
+     "broker": "Bernstein",
+     "title": "AMD 매수 의견·목표가 650달러 재확인 — 공매도 보고서에 반박",
+     "date": "2026-11-23",
+     "category": "테크 기업",
+     "tickers": [
+      "AMD"
+     ],
+     "summary": "번스타인의 마크 뉴먼은 공매도 리서치 업체 헌터브룩의 보고서가 나온 뒤에도 AMD에 대한 매수 의견과 목표가 650달러를 다시 확인했다. 헌터브룩은 AMD가 블랙리스트에 오른 중국 기업의 GPU를 계속 지원했다고 주장했고, AMD는 사실을 왜곡했다고 반박했다.",
+     "points": [
+      "매수 의견, 목표가 650달러 유지(보도 당시 기준 약 44% 상승 여력)",
+      "11월 23일 AMD 주가 7.79% 반등(엔비디아 젠슨 황 복귀로 기술주 전반 강세)",
+      "TipRanks 집계 컨센서스 목표가 약 652달러"
+     ],
+     "why": "공매도 보고서로 흔들린 AMD에 대한 대형 증권사의 첫 대응",
+     "views": null,
+     "url": "https://finance.yahoo.com/markets/stocks/articles/amd-stock-rallies-nearly-8-235832362.html",
+     "url_label": "보도 기사",
+     "access": "원문 비공개 · 보도 요약"
+    },
+    {
+     "rank": 6,
+     "region": "해외",
      "broker": "Deutsche Bank",
      "title": "2027년 말 S&P 500 목표 9,000 — 월가 최고치",
      "date": "2026-11-23",
@@ -95,7 +139,7 @@
      "access": "원문 비공개 · 보도 요약"
     },
     {
-     "rank": 5,
+     "rank": 7,
      "region": "해외",
      "broker": "Bernstein·Jefferies·Stifel 등 6개사",
      "title": "지스케일러 투자의견 일제히 하향",
@@ -117,7 +161,7 @@
      "access": "원문 비공개 · 보도 요약"
     },
     {
-     "rank": 6,
+     "rank": 8,
      "region": "국내",
      "broker": "대신증권",
      "title": "미국 증시: 약세장 아닌 '강세장 속 조정'",
@@ -139,7 +183,7 @@
      "access": "원문 비공개 · 보도 요약"
     },
     {
-     "rank": 7,
+     "rank": 9,
      "region": "국내",
      "broker": "SK증권",
      "title": "연준 12월 25bp 인상 후 내년 1회 추가 인상 전망",
